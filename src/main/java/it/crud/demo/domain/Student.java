@@ -34,7 +34,7 @@ public class Student {
 	@JsonManagedReference
 	private List<StudentCourse> courses;
 	
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "id.student")
 	private List<StudentExam> exams;
 	
 	@OneToOne

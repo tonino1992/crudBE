@@ -4,25 +4,26 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import it.crud.demo.domain.Course;
+import it.crud.demo.domain.Exam;
 import it.crud.demo.domain.Student;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.ManyToOne;
 
 @SuppressWarnings("serial")
 @Embeddable
-public class StudentCourseId implements Serializable {
+public class StudentExamId implements Serializable{
+
 	@ManyToOne	
 	@JsonBackReference
 	private Student student;
 	
 	@ManyToOne
 	@JsonBackReference
-	private Course course;
+	private Exam exam;
 
-	public StudentCourseId(Student student, Course course) {
+	public StudentExamId(Student student, Exam exam) {
 		this.student = student;
-		this.course = course;
+		this.exam = exam;
 	}
 
 	public Student getStudent() {
@@ -33,14 +34,11 @@ public class StudentCourseId implements Serializable {
 		this.student = student;
 	}
 
-	public Course getCourse() {
-		return course;
+	public Exam getExam() {
+		return exam;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
+	public void setExam(Exam exam) {
+		this.exam = exam;
 	}
-	
-	
-
 }

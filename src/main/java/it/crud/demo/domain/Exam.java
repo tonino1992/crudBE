@@ -37,7 +37,7 @@ public class Exam {
 	@JsonBackReference
 	private Course course;
 	
-	@OneToMany(mappedBy = "exam")
+	@OneToMany(mappedBy = "id.exam")
 	private List<StudentExam> students;
 
 	public Exam() {

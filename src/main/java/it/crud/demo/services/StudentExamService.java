@@ -41,8 +41,8 @@ public class StudentExamService {
 		StudentExam studentExam = new StudentExam();
 		studentExam.setBookingDate(LocalDate.now());
 		studentExam.setVote(0);
-		studentExam.setExam(exam);
-		studentExam.setStudent(student);
+		studentExam.getId().setExam(exam);
+		studentExam.getId().setStudent(student);
 		return studentExamRepo.save(studentExam);
 
 	}
@@ -52,7 +52,7 @@ public class StudentExamService {
 		List<StudentExam> examsToDo = this.findExamToDo(student.getExams());
 		
 		for(StudentExam studentExam : examsToDo) {
-			Exam exam = studentExam.getExam();
+			Exam exam = studentExam.getId().getExam();
 			Course examCourse = exam.getCourse();
 			Teacher examTeacher = examCourse.getTeacher();
 			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
@@ -73,7 +73,7 @@ public class StudentExamService {
 		List<StudentExam> examsToDo = this.findExamDone(student.getExams());
 		
 		for(StudentExam studentExam : examsToDo) {
-			Exam exam = studentExam.getExam();
+			Exam exam = studentExam.getId().getExam();
 			Course examCourse = exam.getCourse();
 			Teacher examTeacher = examCourse.getTeacher();
 			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
@@ -111,11 +111,10 @@ public class StudentExamService {
 	
 	public StudentExam updateStudentExam(StudentExamDto studentExamDto) {
 		StudentExam studentExam = new StudentExam();
-		studentExam.setId(studentExamDto.getId());
 		studentExam.setBookingDate(studentExamDto.getBookingDate());
 		studentExam.setVote(studentExamDto.getVote());
-		studentExam.setExam(examService.getExamDaoById(studentExamDto.getExamId()));
-		studentExam.setStudent(studentService.getStudentDaoById(studentExamDto.getStudentId()));
+		studentExam.getId().setExam(examService.getExamDaoById(studentExamDto.getExamId()));
+		studentExam.getId().setStudent(studentService.getStudentDaoById(studentExamDto.getStudentId()));
 		return studentExamRepo.save(studentExam);
 	}
 	

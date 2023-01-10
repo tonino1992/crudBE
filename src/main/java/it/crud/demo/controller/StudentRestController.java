@@ -1,0 +1,82 @@
+package it.crud.demo.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import it.crud.demo.domain.Student;
+import it.crud.demo.dto.CourseJoinTeacherDto;
+import it.crud.demo.dto.ExamJoinCourseDto;
+import it.crud.demo.dto.StudentDto;
+import it.crud.demo.services.StudentService;
+
+@RestController
+@RequestMapping(value = "/students")
+public class StudentRestController {
+
+	StudentService studentService;	
+	
+	public StudentRestController(StudentService studentService) {
+		super();
+		this.studentService = studentService;
+	}
+
+	@GetMapping(value = "/all")
+	public ResponseEntity<List<StudentDto>> getAllStudents(){
+		List<StudentDto> listDto = studentService.getAllStudents();
+		return new ResponseEntity<>(listDto, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<StudentDto> getStudentById(@PathVariable int id) {
+		StudentDto studentDto = studentService.findStudentById(id);
+		return new ResponseEntity<>(studentDto, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/courses")
+	public ResponseEntity<List<CourseJoinTeacherDto>> getStudentCourses(@PathVariable int id){
+		List<CourseJoinTeacherDto> courses = studentService.getCoursesByStudent(id);
+		return new ResponseEntity<>(courses, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/examstodo")
+	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsToDo(@PathVariable int id){
+		List<ExamJoinCourseDto> exams = studentService.getExamsToDoByStudent(id);
+		return new ResponseEntity<>(exams, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/examsdone")
+	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsDone(@PathVariable int id){
+		List<ExamJoinCourseDto> exams = studentService.getExamsDoneByStudent(id);
+		return new ResponseEntity<>(exams, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/add")
+	public ResponseEntity<Student> addTeacher(@RequestBody StudentDto studentDto) {
+		Student student = studentService.addStudent(studentDto);
+		return new ResponseEntity<>(student, HttpStatus.CREATED);
+	}
+	
+	@PutMapping(value = "/update")
+	public ResponseEntity<Student> updateTeacher(@RequestBody StudentDto studentDto) {
+		Student student = studentService.updateStudent(studentDto);
+		return new ResponseEntity<>(student, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping(value = "/delete/{id}")
+	public ResponseEntity<?> deleteTeacher(@PathVariable("id") int id) {
+		studentService.deleteStudent(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
+}

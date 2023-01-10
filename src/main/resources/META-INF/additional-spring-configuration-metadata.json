@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "log4j.appender.consoleAppender",
+    "type": "java.lang.String",
+    "description": "A description for 'log4j.appender.consoleAppender'"
+  },
+  {
+    "name": "log4j.appender.consoleAppender.layout",
+    "type": "java.lang.String",
+    "description": "A description for 'log4j.appender.consoleAppender.layout'"
+  },
+  {
+    "name": "log4j.appender.consoleAppender.layout.ConversionPattern",
+    "type": "java.lang.String",
+    "description": "A description for 'log4j.appender.consoleAppender.layout.ConversionPattern'"
+  },
+  {
+    "name": "log4j.rootLogger",
+    "type": "java.lang.String",
+    "description": "A description for 'log4j.rootLogger'"
+  },
+  {
+    "name": "log4j.appender.consoleAppender",
+    "type": "java.lang.String",
+    "description": "A description for 'log4j.appender.consoleAppender'"
+  },
+  {
+    "name": "springdoc.swagger-ui.path",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.swagger-ui.path'"
+  },
+  {
+    "name": "spring.mvc,pathmatch.matching-strategy",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.mvc,pathmatch.matching-strategy'"
+  }
+]}

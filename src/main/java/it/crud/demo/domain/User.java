@@ -1,0 +1,84 @@
+package it.crud.demo.domain;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
+public class User {
+	
+	@Id
+	@Column(nullable = false)
+	private String userId;
+	@Column(nullable = false)
+	private String password;
+	@Column(nullable = false)
+	private String role;
+	
+	@OneToOne(mappedBy = "userId")
+	@JsonManagedReference
+	private Teacher teacher;
+	
+	@OneToOne(mappedBy = "userId")
+	@JsonManagedReference
+	private Student student;
+	
+	public User() {}
+
+	public User(String userId, String password, String role, Teacher teacher, Student student) {
+		super();
+		this.userId = userId;
+		this.password = password;
+		this.role = role;
+		this.teacher = teacher;
+		this.student = student;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+	
+	
+	
+}

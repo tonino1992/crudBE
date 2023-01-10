@@ -1,0 +1,139 @@
+package it.crud.demo.services;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import it.crud.demo.domain.Course;
+import it.crud.demo.domain.Exam;
+import it.crud.demo.domain.Student;
+import it.crud.demo.domain.StudentCourse;
+import it.crud.demo.domain.StudentExam;
+import it.crud.demo.domain.Teacher;
+import it.crud.demo.dto.ExamJoinCourseDto;
+import it.crud.demo.dto.StudentDto;
+import it.crud.demo.dto.StudentExamDto;
+import it.crud.demo.repositories.StudentExamRepo;
+
+@Service
+public class StudentExamService {
+	
+	private StudentExamRepo studentExamRepo;
+	private StudentService studentService;
+	private ExamService examService;
+	
+	@Autowired
+	public StudentExamService(StudentExamRepo studentExamRepo, StudentService studentService,
+			ExamService examService) {
+		this.studentExamRepo = studentExamRepo;
+		this.studentService = studentService;
+		this.examService = examService;
+	}
+	
+	public StudentExam studentExamBooking(StudentExamDto studentExamDto) {
+
+		Student student = studentService.getStudentDaoById(studentExamDto.getStudentId());
+		Exam exam = examService.getExamDaoById(studentExamDto.getExamId());
+		StudentExam studentExam = new StudentExam();
+		studentExam.setBookingDate(LocalDate.now());
+		studentExam.setVote(0);
+		studentExam.setExam(exam);
+		studentExam.setStudent(student);
+		return studentExamRepo.save(studentExam);
+
+	}
+	
+	public List<ExamJoinCourseDto> getExamsToDoByStudent(Student student){
+		List<ExamJoinCourseDto> exams = new ArrayList<>();
+		List<StudentExam> examsToDo = this.findExamToDo(student.getExams());
+		
+		for(StudentExam studentExam : examsToDo) {
+			Exam exam = studentExam.getExam();
+			Course examCourse = exam.getCourse();
+			Teacher examTeacher = examCourse.getTeacher();
+			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
+			examDto.setId(exam.getId());
+			examDto.setClassroom(exam.getClassroom());
+			examDto.setDay(exam.getDay());
+			examDto.setHour(exam.getHour());
+			examDto.setCourseSubject(examCourse.getSubject());
+			examDto.setTeacherName(examTeacher.getName());
+			examDto.setTeacherSurname(examTeacher.getSurname());
+			exams.add(examDto);
+		}
+		return exams;
+	}
+	
+	public List<ExamJoinCourseDto> getExamsDoneByStudent(Student student){
+		List<ExamJoinCourseDto> exams = new ArrayList<>();
+		List<StudentExam> examsToDo = this.findExamDone(student.getExams());
+		
+		for(StudentExam studentExam : examsToDo) {
+			Exam exam = studentExam.getExam();
+			Course examCourse = exam.getCourse();
+			Teacher examTeacher = examCourse.getTeacher();
+			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
+			examDto.setId(exam.getId());
+			examDto.setClassroom(exam.getClassroom());
+			examDto.setDay(exam.getDay());
+			examDto.setHour(exam.getHour());
+			examDto.setCourseSubject(examCourse.getSubject());
+			examDto.setVote(studentExam.getVote());
+			examDto.setTeacherName(examTeacher.getName());
+			examDto.setTeacherSurname(examTeacher.getSurname());
+			exams.add(examDto);
+		}
+		return exams;
+		
+	}
+	
+	private List<StudentExam> findExamToDo(List<StudentExam> exams){
+		List<StudentExam> examsToDo = exams
+				.stream()
+				.filter(e -> e.getVote() == 0)
+				.collect(Collectors.toList());
+		
+		return examsToDo;
+	}
+	
+	private List<StudentExam> findExamDone(List<StudentExam> exams){
+		List<StudentExam> examsDone = exams
+				.stream()
+				.filter(e -> e.getVote() > 0)
+				.collect(Collectors.toList());
+		
+		return examsDone;
+	}
+	
+	public StudentExam updateStudentExam(StudentExamDto studentExamDto) {
+		StudentExam studentExam = new StudentExam();
+		studentExam.setId(studentExamDto.getId());
+		studentExam.setBookingDate(studentExamDto.getBookingDate());
+		studentExam.setVote(studentExamDto.getVote());
+		studentExam.setExam(examService.getExamDaoById(studentExamDto.getExamId()));
+		studentExam.setStudent(studentService.getStudentDaoById(studentExamDto.getStudentId()));
+		return studentExamRepo.save(studentExam);
+	}
+	
+	public List<StudentDto> getStudentsByExam(int id){
+		List<StudentDto> students = new ArrayList<>();
+		Exam exam = this.examService.getExamDaoById(id);
+		
+		for (StudentCourse studentCourse : exam.getCourse().getStudents()) {
+			StudentDto studentDto = new StudentDto();
+			Student student = studentCourse.getStudent();
+			studentDto.setId(student.getId());
+			studentDto.setName(student.getName());
+			studentDto.setSurname(student.getSurname());
+			studentDto.setAge(student.getAge());
+			studentDto.setUserId(student.getUserId().getUserId());
+			students.add(studentDto);
+		}
+		return students;
+	}
+
+}

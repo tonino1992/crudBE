@@ -1,0 +1,104 @@
+package it.crud.demo.services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import it.crud.demo.domain.Student;
+import it.crud.demo.dto.CourseJoinTeacherDto;
+import it.crud.demo.dto.ExamJoinCourseDto;
+import it.crud.demo.dto.StudentDto;
+import it.crud.demo.exceptions.StudentNotFoundException;
+import it.crud.demo.repositories.StudentRepo;
+
+@Service
+public class StudentService {
+
+	private StudentRepo studentRepo;
+	private UserService userService;
+	private StudentCourseService studentCourseService;
+	private StudentExamService studentExamService;
+
+	@Autowired
+	public StudentService(StudentRepo studentRepo ) {
+		
+		this.studentRepo = studentRepo;
+		
+	}
+
+	public Student getStudentDaoById(int id) {
+		return studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException("Studente non trovato"));
+	}
+
+	public List<StudentDto> getAllStudents() {
+		List<StudentDto> listDto = new ArrayList<StudentDto>();
+		List<Student> students = studentRepo.findAll();
+
+		for (Student student : students) {
+			StudentDto studentDto = new StudentDto();
+			studentDto.setId(student.getId());
+			studentDto.setName(student.getName());
+			studentDto.setSurname(student.getSurname());
+			studentDto.setAge(student.getAge());
+			studentDto.setUserId(student.getUserId().getUserId());
+
+			listDto.add(studentDto);
+		}
+
+		return listDto;
+	}
+
+	public StudentDto findStudentById(int id) {
+		Student student = this.getStudentDaoById(id);
+		StudentDto studentDto = new StudentDto();
+		studentDto.setId(student.getId());
+		studentDto.setName(student.getName());
+		studentDto.setSurname(student.getSurname());
+		studentDto.setAge(student.getAge());
+		studentDto.setUserId(student.getUserId().getUserId());
+
+		return studentDto;
+	}
+
+	public Student updateStudent(StudentDto studentDto) {
+		Student student = new Student();
+		student.setId(studentDto.getId());
+		student.setName(studentDto.getName());
+		student.setSurname(studentDto.getSurname());
+		student.setAge(studentDto.getAge());
+		student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
+
+		return studentRepo.save(student);
+	}
+
+	public Student addStudent(StudentDto studentDto) {
+		Student student = new Student();
+		student.setName(studentDto.getName());
+		student.setSurname(studentDto.getSurname());
+		student.setAge(studentDto.getAge());
+		student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
+
+		return studentRepo.save(student);
+	}
+
+	public void deleteStudent(int id) {
+		studentRepo.deleteById(id);
+	}
+
+	public List<CourseJoinTeacherDto> getCoursesByStudent(int id) {
+		Student student = this.getStudentDaoById(id);
+		return studentCourseService.getCoursesByStudent(student);
+	}
+
+	public List<ExamJoinCourseDto> getExamsToDoByStudent(int id) {
+		Student student = this.getStudentDaoById(id);
+		return studentExamService.getExamsToDoByStudent(student);
+	}
+	
+	public List<ExamJoinCourseDto> getExamsDoneByStudent(int id){
+		Student student = this.getStudentDaoById(id);
+		return studentExamService.getExamsDoneByStudent(student);
+	}
+}

@@ -125,7 +125,7 @@ public class StudentExamService {
 		
 		for (StudentCourse studentCourse : exam.getCourse().getStudents()) {
 			StudentDto studentDto = new StudentDto();
-			Student student = studentCourse.getStudent();
+			Student student = studentCourse.getId().getStudent();
 			studentDto.setId(student.getId());
 			studentDto.setName(student.getName());
 			studentDto.setSurname(student.getSurname());

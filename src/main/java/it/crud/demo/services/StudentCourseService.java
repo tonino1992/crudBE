@@ -34,8 +34,8 @@ public class StudentCourseService {
 		Student student = studentService.getStudentDaoById(studentCourseDto.getStudentId());
 		Course course = courseService.getCourseDaoById(studentCourseDto.getCourseId());
 		StudentCourse studentCourse = new StudentCourse();
-		studentCourse.setCourse(course);
-		studentCourse.setStudent(student);
+		studentCourse.getId().setCourse(course);
+		studentCourse.getId().setStudent(student);
 		return studentCourseRepo.save(studentCourse);
 
 	}
@@ -44,7 +44,7 @@ public class StudentCourseService {
 		List<CourseJoinTeacherDto> courses = new ArrayList<>();
 		
 		for (StudentCourse studentCourse : student.getCourses()) {
-			Course course = studentCourse.getCourse();
+			Course course = studentCourse.getId().getCourse();
 			CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
 			courseDto.setId(course.getId());
 			courseDto.setHourAmount(course.getHourAmount());
@@ -63,7 +63,7 @@ public class StudentCourseService {
 		List<StudentDto> students = new ArrayList<>();
 		
 		for (StudentCourse studentCourse : course.getStudents()) {
-			Student student = studentCourse.getStudent();
+			Student student = studentCourse.getId().getStudent();
 			StudentDto studentDto = new StudentDto();
 			studentDto.setId(student.getId());
 			studentDto.setName(student.getName());

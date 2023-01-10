@@ -30,7 +30,7 @@ public class Student {
 	private String surname;
 	private int age;
 	
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "id.student")
 	@JsonManagedReference
 	private List<StudentCourse> courses;
 	

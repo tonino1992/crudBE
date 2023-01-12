@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import it.crud.demo.domain.Course;
 import it.crud.demo.domain.Student;
 import it.crud.demo.domain.StudentCourse;
+import it.crud.demo.domain.id.StudentCourseId;
 import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.dto.StudentCourseDto;
 import it.crud.demo.dto.StudentDto;
+import it.crud.demo.exceptions.StudentCourseAlreadyExistsException;
 import it.crud.demo.repositories.StudentCourseRepo;
 
 @Service
@@ -29,20 +31,23 @@ public class StudentCourseService {
 		this.courseService = courseService;
 	}
 
-	public StudentCourse studentCourseIscription(StudentCourseDto studentCourseDto) {
+	public StudentCourse studentCourseIscription(StudentCourseDto studentCourseDto) throws StudentCourseAlreadyExistsException {
 
-		Student student = studentService.getStudentDaoById(studentCourseDto.getStudentId());
-		Course course = courseService.getCourseDaoById(studentCourseDto.getCourseId());
-		StudentCourse studentCourse = new StudentCourse();
-		studentCourse.getId().setCourse(course);
-		studentCourse.getId().setStudent(student);
-		return studentCourseRepo.save(studentCourse);
-
+	    Student student = studentService.getStudentDaoById(studentCourseDto.getStudentId());
+	    Course course = courseService.getCourseDaoById(studentCourseDto.getCourseId());
+	    StudentCourseId id = new StudentCourseId(student,course);
+	    
+	    if(studentCourseRepo.findById(id).isPresent()) {
+	        throw new StudentCourseAlreadyExistsException("Sei già iscritto a questo corso");
+	    }
+	    StudentCourse studentCourse = new StudentCourse(id);
+	    return studentCourseRepo.save(studentCourse);
 	}
-	
-	public List<CourseJoinTeacherDto> getCoursesByStudent(Student student){
+
+
+	public List<CourseJoinTeacherDto> getCoursesByStudent(Student student) {
 		List<CourseJoinTeacherDto> courses = new ArrayList<>();
-		
+
 		for (StudentCourse studentCourse : student.getCourses()) {
 			Course course = studentCourse.getId().getCourse();
 			CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
@@ -51,17 +56,17 @@ public class StudentCourseService {
 			courseDto.setSubject(course.getSubject());
 			courseDto.setTeacherName(course.getTeacher().getName());
 			courseDto.setTeacherSurname(course.getTeacher().getSurname());
-			courses.add(courseDto);			
+			courses.add(courseDto);
 		}
 		return courses;
 	}
-	
-	public List<StudentDto> getStudentsbyCourse(int id){
-		
+
+	public List<StudentDto> getStudentsbyCourse(int id) {
+
 		Course course = this.courseService.getCourseDaoById(id);
-		
+
 		List<StudentDto> students = new ArrayList<>();
-		
+
 		for (StudentCourse studentCourse : course.getStudents()) {
 			Student student = studentCourse.getId().getStudent();
 			StudentDto studentDto = new StudentDto();

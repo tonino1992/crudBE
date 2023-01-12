@@ -14,17 +14,17 @@ import it.crud.demo.services.StudentCourseService;
 @RestController
 @RequestMapping(value = "/studentcourses")
 public class StudentCourseRestController {
-	
-	StudentCourseService studentCourseService;	
+
+	StudentCourseService studentCourseService;
 
 	public StudentCourseRestController(StudentCourseService studentCourseService) {
 		this.studentCourseService = studentCourseService;
 	}
 
 	@PostMapping(value = "/iscription")
-	public ResponseEntity<StudentCourse> studentCourseIscrioption(@RequestBody StudentCourseDto studentCourseDto){		
+	public ResponseEntity<StudentCourse> studentCourseIscrioption(@RequestBody StudentCourseDto studentCourseDto) {
 		StudentCourse studentCourse = studentCourseService.studentCourseIscription(studentCourseDto);
 		return new ResponseEntity<>(studentCourse, HttpStatus.CREATED);
 	}
-	
+
 }

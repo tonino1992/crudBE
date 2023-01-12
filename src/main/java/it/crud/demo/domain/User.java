@@ -2,8 +2,11 @@ package it.crud.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import it.crud.demo.domain.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -17,8 +20,9 @@ public class User {
 	private String userId;
 	@Column(nullable = false)
 	private String password;
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String role;
+	private UserRole role;
 	
 	@OneToOne(mappedBy = "userId")
 	@JsonManagedReference
@@ -30,7 +34,7 @@ public class User {
 	
 	public User() {}
 
-	public User(String userId, String password, String role, Teacher teacher, Student student) {
+	public User(String userId, String password, UserRole role, Teacher teacher, Student student) {
 		super();
 		this.userId = userId;
 		this.password = password;
@@ -55,11 +59,11 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 

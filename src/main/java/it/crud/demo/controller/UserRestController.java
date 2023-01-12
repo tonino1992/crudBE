@@ -37,6 +37,12 @@ public class UserRestController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
+	@PostMapping("/login")
+	public ResponseEntity<Object> login(@RequestBody UserDto userDto) {
+	    Object userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
+	    return new ResponseEntity<>(userDateDto, HttpStatus.OK);
+	}
+	
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
 		userService.deleteUser(id);

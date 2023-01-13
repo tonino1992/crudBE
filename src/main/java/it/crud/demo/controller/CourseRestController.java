@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import it.crud.demo.domain.Course;
 import it.crud.demo.dto.CourseDto;
-import it.crud.demo.dto.StudentDto;
 import it.crud.demo.services.CourseService;
-import it.crud.demo.services.StudentCourseService;
 
 @RestController
 @OpenAPIDefinition
@@ -24,7 +22,6 @@ import it.crud.demo.services.StudentCourseService;
 public class CourseRestController {
 
 	private CourseService courseService;
-	private StudentCourseService studentCourseService;
 
 	public CourseRestController(CourseService courseService) {
 		this.courseService = courseService;

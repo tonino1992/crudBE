@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import it.crud.demo.domain.Course;
 import it.crud.demo.domain.Exam;
 import it.crud.demo.domain.Teacher;
+import it.crud.demo.domain.User;
 import it.crud.demo.dto.CourseDto;
 import it.crud.demo.dto.ExamJoinCourseDto;
 import it.crud.demo.dto.TeacherDto;
+import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.TeacherNotFoundException;
 import it.crud.demo.repositories.TeacherRepo;
 
@@ -22,8 +24,9 @@ public class TeacherService {
 	private UserService userService;
 
 	@Autowired
-	public TeacherService(TeacherRepo teacherRepo) {
+	public TeacherService(TeacherRepo teacherRepo, UserService userService) {
 		this.teacherRepo = teacherRepo;
+		this.userService = userService;
 	}
 
 	public List<TeacherDto> getAllTeacher() {
@@ -95,14 +98,21 @@ public class TeacherService {
 	}
 	
 	public Teacher addTeacher(TeacherDto teacherDto) {
-		Teacher teacher = new Teacher();
-		teacher.setName(teacherDto.getName());
-		teacher.setSurname(teacherDto.getSurname());
-		teacher.setAge(teacherDto.getAge());
-		teacher.setUserId(userService.findUserDaoById(teacherDto.getUserId()));
-		
-		return teacherRepo.save(teacher);
+	    UserDto user = new UserDto();
+	    user.setUserId(teacherDto.getUserId());
+	    user.setPassword(teacherDto.getPassword());
+	    user.setRole(teacherDto.getRole());
+	    User userSaved = userService.addOrUpdateUser(user);
+
+	    Teacher teacher= new Teacher();
+	    teacher.setName(teacherDto.getName());
+	    teacher.setSurname(teacherDto.getSurname());
+	    teacher.setAge(teacherDto.getAge());
+	    teacher.setUserId(userSaved);
+
+	    return teacherRepo.save(teacher);
 	}
+
 	
 	public Teacher updateTeacher(TeacherDto teacherDto) {
 		Teacher teacher = new Teacher();

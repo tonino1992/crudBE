@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.crud.demo.domain.Student;
-import it.crud.demo.dto.CourseJoinTeacherDto;
-import it.crud.demo.dto.ExamJoinCourseDto;
+import it.crud.demo.domain.User;
 import it.crud.demo.dto.StudentDto;
+import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.StudentNotFoundException;
 import it.crud.demo.repositories.StudentRepo;
 
@@ -18,19 +18,19 @@ public class StudentService {
 
 	private StudentRepo studentRepo;
 	private UserService userService;
-	private StudentCourseService studentCourseService;
-	private StudentExamService studentExamService;
 
 	@Autowired
-	public StudentService(StudentRepo studentRepo ) {
-		
+	public StudentService(StudentRepo studentRepo, UserService userService) {
+		super();
 		this.studentRepo = studentRepo;
-		
+		this.userService = userService;
 	}
+
 
 	public Student getStudentDaoById(int id) {
 		return studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException("Studente non trovato"));
 	}
+
 
 	public List<StudentDto> getAllStudents() {
 		List<StudentDto> listDto = new ArrayList<StudentDto>();
@@ -74,31 +74,27 @@ public class StudentService {
 	}
 
 	public Student addStudent(StudentDto studentDto) {
-		Student student = new Student();
-		student.setName(studentDto.getName());
-		student.setSurname(studentDto.getSurname());
-		student.setAge(studentDto.getAge());
-		student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
+	    UserDto user = new UserDto();
+	    user.setUserId(studentDto.getUserId());
+	    user.setPassword(studentDto.getPassword());
+	    user.setRole(studentDto.getRole());
+	    User userSaved = userService.addOrUpdateUser(user);
 
-		return studentRepo.save(student);
+	    Student student = new Student();
+	    student.setName(studentDto.getName());
+	    student.setSurname(studentDto.getSurname());
+	    student.setAge(studentDto.getAge());
+	    student.setUserId(userSaved);
+
+	    return studentRepo.save(student);
 	}
+
 
 	public void deleteStudent(int id) {
 		studentRepo.deleteById(id);
 	}
 
-	public List<CourseJoinTeacherDto> getCoursesByStudent(int id) {
-		Student student = this.getStudentDaoById(id);
-		return studentCourseService.getCoursesByStudent(student);
-	}
 
-	public List<ExamJoinCourseDto> getExamsToDoByStudent(int id) {
-		Student student = this.getStudentDaoById(id);
-		return studentExamService.getExamsToDoByStudent(student);
-	}
-	
-	public List<ExamJoinCourseDto> getExamsDoneByStudent(int id){
-		Student student = this.getStudentDaoById(id);
-		return studentExamService.getExamsDoneByStudent(student);
-	}
+
+
 }

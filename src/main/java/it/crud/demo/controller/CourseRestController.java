@@ -42,11 +42,6 @@ public class CourseRestController {
 		return new ResponseEntity<>(courseDto, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}/students")
-	public ResponseEntity<List<StudentDto>> getStudentsByCourse(@PathVariable int id) {
-		List<StudentDto> students = studentCourseService.getStudentsbyCourse(id);
-		return new ResponseEntity<>(students, HttpStatus.OK);
-	}
 
 	@PostMapping(value = "/add")
 	public ResponseEntity<Course> addCourse(@RequestBody CourseDto courseDto) {

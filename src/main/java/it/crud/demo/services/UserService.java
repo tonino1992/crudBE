@@ -33,7 +33,7 @@ public class UserService {
 		User user = new User();
 		user.setUserId(userDto.getUserId());
 		user.setPassword(userDto.getPassword());
-		user.setRole(UserRole.valueOf(userDto.getRole()));
+		user.setRole(userDto.getRole());
 		return userRepo.save(user);
 	}
 

@@ -4,6 +4,8 @@ import it.crud.demo.domain.enums.UserRole;
 
 public class StudentDto extends PersonDto{
 	
+	private String password;
+	
 	public StudentDto(){
 		super();
 	};
@@ -15,5 +17,13 @@ public class StudentDto extends PersonDto{
 	@Override
 	public UserRole getRole() {
 		return UserRole.STUDENT;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

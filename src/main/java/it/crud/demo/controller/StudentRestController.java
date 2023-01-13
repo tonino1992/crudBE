@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.crud.demo.domain.Student;
-import it.crud.demo.dto.CourseJoinTeacherDto;
-import it.crud.demo.dto.ExamJoinCourseDto;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.services.StudentService;
 
@@ -41,25 +39,7 @@ public class StudentRestController {
 		StudentDto studentDto = studentService.findStudentById(id);
 		return new ResponseEntity<>(studentDto, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/{id}/courses")
-	public ResponseEntity<List<CourseJoinTeacherDto>> getStudentCourses(@PathVariable int id){
-		List<CourseJoinTeacherDto> courses = studentService.getCoursesByStudent(id);
-		return new ResponseEntity<>(courses, HttpStatus.OK);
-	}
-	
-	@GetMapping(value = "/{id}/examstodo")
-	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsToDo(@PathVariable int id){
-		List<ExamJoinCourseDto> exams = studentService.getExamsToDoByStudent(id);
-		return new ResponseEntity<>(exams, HttpStatus.OK);
-	}
-	
-	@GetMapping(value = "/{id}/examsdone")
-	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsDone(@PathVariable int id){
-		List<ExamJoinCourseDto> exams = studentService.getExamsDoneByStudent(id);
-		return new ResponseEntity<>(exams, HttpStatus.OK);
-	}
-	
+		
 	@PostMapping(value = "/add")
 	public ResponseEntity<Student> addTeacher(@RequestBody StudentDto studentDto) {
 		Student student = studentService.addStudent(studentDto);

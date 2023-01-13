@@ -31,23 +31,23 @@ public class StudentCourseService {
 		this.courseService = courseService;
 	}
 
-	public StudentCourse studentCourseIscription(StudentCourseDto studentCourseDto) throws StudentCourseAlreadyExistsException {
+	public StudentCourse studentCourseIscription(StudentCourseDto studentCourseDto)
+			throws StudentCourseAlreadyExistsException {
 
-	    Student student = studentService.getStudentDaoById(studentCourseDto.getStudentId());
-	    Course course = courseService.getCourseDaoById(studentCourseDto.getCourseId());
-	    StudentCourseId id = new StudentCourseId(student,course);
-	    
-	    if(studentCourseRepo.findById(id).isPresent()) {
-	        throw new StudentCourseAlreadyExistsException("Sei già iscritto a questo corso");
-	    }
-	    StudentCourse studentCourse = new StudentCourse(id);
-	    return studentCourseRepo.save(studentCourse);
+		Student student = studentService.getStudentDaoById(studentCourseDto.getStudentId());
+		Course course = courseService.getCourseDaoById(studentCourseDto.getCourseId());
+		StudentCourseId id = new StudentCourseId(student, course);
+
+		if (studentCourseRepo.findById(id).isPresent()) {
+			throw new StudentCourseAlreadyExistsException("Sei già iscritto a questo corso");
+		}
+		StudentCourse studentCourse = new StudentCourse(id);
+		return studentCourseRepo.save(studentCourse);
 	}
 
-
-	public List<CourseJoinTeacherDto> getCoursesByStudent(Student student) {
+	public List<CourseJoinTeacherDto> getCoursesByStudent(int id) {
 		List<CourseJoinTeacherDto> courses = new ArrayList<>();
-
+		Student student = studentService.getStudentDaoById(id);
 		for (StudentCourse studentCourse : student.getCourses()) {
 			Course course = studentCourse.getId().getCourse();
 			CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();

@@ -51,12 +51,14 @@ public class StudentExamService {
 		return studentExamRepo.save(studentExam);
 	}
 
-	public List<ExamJoinCourseDto> getExamsToDoByStudent(Student student) {
+	public List<ExamJoinCourseDto> getExamsToDoByStudent(int id) {
+		Student student = studentService.getStudentDaoById(id);
 		return getExamsByStudent(student.getExams(), e -> e.getVote() == 0);
 	}
 
-	public List<ExamJoinCourseDto> getExamsDoneByStudent(Student student) {
-		 return getExamsByStudent(student.getExams(), e -> e.getVote() > 0);
+	public List<ExamJoinCourseDto> getExamsDoneByStudent(int id) {
+		Student student = studentService.getStudentDaoById(id);
+		return getExamsByStudent(student.getExams(), e -> e.getVote() > 0);
 	}
 
 	private List<ExamJoinCourseDto> getExamsByStudent(List<StudentExam> exams, Predicate<StudentExam> filter) {

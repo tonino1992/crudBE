@@ -1,10 +1,12 @@
 package it.crud.demo.dto;
 
+import it.crud.demo.domain.enums.UserRole;
+
 public class UserDto {
 	
 	private String userId;
 	private String password;
-	private String role;
+	private UserRole role;
 	
 	
 	public String getUserId() {
@@ -19,10 +21,10 @@ public class UserDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRole() {
+	public UserRole getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 	

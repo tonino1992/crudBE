@@ -3,6 +3,8 @@ package it.crud.demo.dto;
 import it.crud.demo.domain.enums.UserRole;
 
 public class TeacherDto extends PersonDto{
+	
+	private String password;
 
 	public TeacherDto(){
 		super();
@@ -17,6 +19,13 @@ public class TeacherDto extends PersonDto{
 	public UserRole getRole() {
 		return UserRole.TEACHER;
 	}
-	
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+		
 }

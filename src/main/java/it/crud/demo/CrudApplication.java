@@ -2,7 +2,6 @@ package it.crud.demo;
 
 import java.util.Arrays;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,9 +11,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+
 @SpringBootApplication
 public class CrudApplication extends SpringBootServletInitializer{
-
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CrudApplication.class, args);

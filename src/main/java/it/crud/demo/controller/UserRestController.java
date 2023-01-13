@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.crud.demo.domain.User;
+import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.services.UserService;
 
@@ -38,8 +39,8 @@ public class UserRestController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody UserDto userDto) {
-	    Object userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
+	public ResponseEntity<PersonDto> login(@RequestBody UserDto userDto) {
+		PersonDto userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
 	    return new ResponseEntity<>(userDateDto, HttpStatus.OK);
 	}
 	

@@ -7,6 +7,7 @@ import it.crud.demo.domain.Student;
 import it.crud.demo.domain.Teacher;
 import it.crud.demo.domain.User;
 import it.crud.demo.domain.enums.UserRole;
+import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.TeacherDto;
 import it.crud.demo.dto.UserDto;
@@ -40,32 +41,19 @@ public class UserService {
 		userRepo.deleteById(userId);
 	}
 
-	public Object validateUser(String userId, String password) {
-	    User user = userRepo.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("Utente non trovato"));
+	public PersonDto validateUser(String userId, String password) {
+	    User user = userRepo.findByUserId(userId);
 	    if (user != null && user.getPassword().equals(password)) {
-	        if (user.getRole() == UserRole.STUDENT) {
-	            // restituisci DTO per studente
+	        if (user.getRole().equals(UserRole.STUDENT)) {
 	            Student student = user.getStudent();
-	            StudentDto studentDto = new StudentDto();
-	            studentDto.setId(student.getId());
-	            studentDto.setName(student.getName());
-	            studentDto.setSurname(student.getSurname());
-	            studentDto.setAge(student.getAge());
-	            studentDto.setUserId(student.getUserId().getUserId());
-	            return studentDto;
-	        } else if (user.getRole() == UserRole.TEACHER) {
-	            // restituisci DTO per insegnante
+	            return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(), student.getSurname(), student.getAge());
+	        } else if (user.getRole().equals(UserRole.TEACHER)) {
 	            Teacher teacher = user.getTeacher();
-	            TeacherDto teacherDto = new TeacherDto();
-	            teacherDto.setId(teacher.getId());
-	            teacherDto.setName(teacher.getName());
-	            teacherDto.setSurname(teacher.getSurname());
-	            teacherDto.setAge(teacher.getAge());
-	            teacherDto.setUserId(teacher.getUserId().getUserId());
-	            return teacherDto;
+	            return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(), teacher.getSurname(), teacher.getAge());
 	        }
 	    }
-		return user;
+	    throw new UserNotFoundException("user not valid");
 	}
+
 
 }

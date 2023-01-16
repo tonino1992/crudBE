@@ -7,9 +7,11 @@ public class CourseJoinTeacherDto {
 	private double hourAmount;
 	private String teacherName;
 	private String teacherSurname;
+	
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}

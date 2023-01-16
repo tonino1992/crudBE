@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.crud.demo.domain.Exam;
 import it.crud.demo.dto.ExamDto;
+import it.crud.demo.dto.ExamJoinCourseDto;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.services.ExamService;
 import it.crud.demo.services.StudentExamService;
@@ -32,14 +33,14 @@ public class ExamRestController {
 	}
 
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<ExamDto>> getAllExams() {
-		List<ExamDto> listDto = examService.getAllExams();
+	public ResponseEntity<List<ExamJoinCourseDto>> getAllExams() {
+		List<ExamJoinCourseDto> listDto = examService.getAllExams();
 		return new ResponseEntity<>(listDto, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ExamDto> getExamById(@PathVariable("id") int id) {
-		ExamDto examDto = examService.getExamById(id);
+	public ResponseEntity<ExamJoinCourseDto> getExamById(@PathVariable("id") int id) {
+		ExamJoinCourseDto examDto = examService.getExamById(id);
 		return new ResponseEntity<>(examDto, HttpStatus.OK);
 	}
 	

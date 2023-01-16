@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import it.crud.demo.domain.Exam;
 import it.crud.demo.dto.ExamDto;
+import it.crud.demo.dto.ExamJoinCourseDto;
 import it.crud.demo.exceptions.ExamNotFoundException;
 import it.crud.demo.repositories.ExamRepo;
 
@@ -28,17 +29,19 @@ public class ExamService {
 		return examRepo.findById(id).orElseThrow(() -> new ExamNotFoundException("Esame non trovato"));
 	}
 
-	public List<ExamDto> getAllExams() {
-		List<ExamDto> listDto = new ArrayList<ExamDto>();
+	public List<ExamJoinCourseDto> getAllExams() {
+		List<ExamJoinCourseDto> listDto = new ArrayList<ExamJoinCourseDto>();
 		List<Exam> exams = examRepo.findAll();
 
 		for (Exam exam : exams) {
-			ExamDto examDto = new ExamDto();
+			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
 			examDto.setId(exam.getId());
-			examDto.setClassroom(exam.getClassroom());
-			examDto.setCourseId(exam.getCourse().getId());
+			examDto.setClassroom(exam.getClassroom());			
 			examDto.setDay(exam.getDay());
 			examDto.setHour(exam.getHour());
+			examDto.setCourseSubject(exam.getCourse().getSubject());
+			examDto.setTeacherName(exam.getCourse().getTeacher().getName());
+			examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());
 
 			listDto.add(examDto);
 		}
@@ -46,14 +49,16 @@ public class ExamService {
 		return listDto;
 	}
 
-	public ExamDto getExamById(int id) {
+	public ExamJoinCourseDto getExamById(int id) {
 		Exam exam = this.getExamDaoById(id);
-		ExamDto examDto = new ExamDto();
+		ExamJoinCourseDto examDto = new ExamJoinCourseDto();
 		examDto.setId(exam.getId());
 		examDto.setClassroom(exam.getClassroom());
-		examDto.setCourseId(exam.getCourse().getId());
 		examDto.setDay(exam.getDay());
 		examDto.setHour(exam.getHour());
+		examDto.setCourseSubject(exam.getCourse().getSubject());
+		examDto.setTeacherName(exam.getCourse().getTeacher().getName());
+		examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());
 
 		return examDto;
 	}

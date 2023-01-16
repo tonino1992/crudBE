@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import it.crud.demo.domain.Course;
 import it.crud.demo.domain.Teacher;
 import it.crud.demo.dto.CourseDto;
+import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.exceptions.CourseNotFoundException;
 import it.crud.demo.repositories.CourseRepo;
 
@@ -28,16 +29,17 @@ public class CourseService {
 		return courseRepo.findById(id).orElseThrow(() -> new CourseNotFoundException("Corso non trovato"));
 	}
 
-	public List<CourseDto> getAllCourses() {
-		List<CourseDto> listDto = new ArrayList<>();
+	public List<CourseJoinTeacherDto> getAllCourses() {
+		List<CourseJoinTeacherDto> listDto = new ArrayList<>();
 		List<Course> courses = courseRepo.findAll();
 
 		for (Course course : courses) {
-			CourseDto courseDto = new CourseDto();
+			CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
 			courseDto.setId(course.getId());
 			courseDto.setSubject(course.getSubject());
 			courseDto.setHourAmount(course.getHourAmount());
-			courseDto.setTeacherId(course.getTeacher().getId());
+			courseDto.setTeacherName(course.getTeacher().getName());
+			courseDto.setTeacherSurname(course.getTeacher().getSurname());
 			listDto.add(courseDto);
 		}
 
@@ -54,13 +56,14 @@ public class CourseService {
 		return courseRepo.save(course);
 	}
 
-	public CourseDto findCourseById(int id) {
+	public CourseJoinTeacherDto findCourseById(int id) {
 		Course course = this.getCourseDaoById(id);
-		CourseDto courseDto = new CourseDto();
+		CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
 		courseDto.setId(course.getId());
 		courseDto.setSubject(course.getSubject());
 		courseDto.setHourAmount(course.getHourAmount());
-		courseDto.setTeacherId(course.getTeacher().getId());
+		courseDto.setTeacherName(course.getTeacher().getName());
+		courseDto.setTeacherSurname(course.getTeacher().getSurname());
 
 		return courseDto;
 	}

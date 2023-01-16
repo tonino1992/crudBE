@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import it.crud.demo.domain.Course;
 import it.crud.demo.dto.CourseDto;
+import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.services.CourseService;
 
 @RestController
@@ -28,14 +29,14 @@ public class CourseRestController {
 	}
 
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<CourseDto>> getAllCourses() {
-		List<CourseDto> listDto = this.courseService.getAllCourses();
+	public ResponseEntity<List<CourseJoinTeacherDto>> getAllCourses() {
+		List<CourseJoinTeacherDto> listDto = this.courseService.getAllCourses();
 		return new ResponseEntity<>(listDto, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<CourseDto> getCourseById(@PathVariable int id) {
-		CourseDto courseDto = courseService.findCourseById(id);
+	public ResponseEntity<CourseJoinTeacherDto> getCourseById(@PathVariable int id) {
+		CourseJoinTeacherDto courseDto = courseService.findCourseById(id);
 		return new ResponseEntity<>(courseDto, HttpStatus.OK);
 	}
 

@@ -3,20 +3,12 @@ package it.crud.demo.dto;
 import java.time.LocalDate;
 
 public class StudentExamDto {
-	
-	private int id;
+
 	LocalDate bookingDate;
 	int vote;
 	private int studentId;
 	private int examId;
 	
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public LocalDate getBookingDate() {
 		return bookingDate;
 	}

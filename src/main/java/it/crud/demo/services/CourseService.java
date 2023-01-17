@@ -38,6 +38,7 @@ public class CourseService {
 			courseDto.setId(course.getId());
 			courseDto.setSubject(course.getSubject());
 			courseDto.setHourAmount(course.getHourAmount());
+			courseDto.setTeacherId(course.getTeacher().getId());
 			courseDto.setTeacherName(course.getTeacher().getName());
 			courseDto.setTeacherSurname(course.getTeacher().getSurname());
 			listDto.add(courseDto);
@@ -62,6 +63,7 @@ public class CourseService {
 		courseDto.setId(course.getId());
 		courseDto.setSubject(course.getSubject());
 		courseDto.setHourAmount(course.getHourAmount());
+		courseDto.setTeacherId(course.getTeacher().getId());
 		courseDto.setTeacherName(course.getTeacher().getName());
 		courseDto.setTeacherSurname(course.getTeacher().getSurname());
 

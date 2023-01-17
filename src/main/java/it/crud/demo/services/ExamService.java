@@ -39,6 +39,7 @@ public class ExamService {
 			examDto.setClassroom(exam.getClassroom());			
 			examDto.setDay(exam.getDay());
 			examDto.setHour(exam.getHour());
+			examDto.setCourseId(exam.getCourse().getId());
 			examDto.setCourseSubject(exam.getCourse().getSubject());
 			examDto.setTeacherName(exam.getCourse().getTeacher().getName());
 			examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());
@@ -56,6 +57,7 @@ public class ExamService {
 		examDto.setClassroom(exam.getClassroom());
 		examDto.setDay(exam.getDay());
 		examDto.setHour(exam.getHour());
+		examDto.setCourseId(exam.getCourse().getId());
 		examDto.setCourseSubject(exam.getCourse().getSubject());
 		examDto.setTeacherName(exam.getCourse().getTeacher().getName());
 		examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());

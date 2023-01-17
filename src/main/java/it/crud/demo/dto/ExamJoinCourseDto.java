@@ -10,6 +10,7 @@ public class ExamJoinCourseDto {
 	private Time hour;
 	private int vote;
 	private String classroom;
+	private int courseId;
 	private String courseSubject;
 	private String teacherName;
 	private String teacherSurname;
@@ -46,6 +47,14 @@ public class ExamJoinCourseDto {
 		this.classroom = classroom;
 	}
 
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+
 	public String getCourseSubject() {
 		return courseSubject;
 	}
@@ -77,5 +86,5 @@ public class ExamJoinCourseDto {
 	public void setVote(int vote) {
 		this.vote = vote;
 	}
-		
+
 }

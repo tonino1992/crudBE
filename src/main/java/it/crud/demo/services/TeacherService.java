@@ -97,7 +97,7 @@ public class TeacherService {
 		return exams;
 	}
 	
-	public Teacher addStudent(TeacherDto teacherDto) {
+	public Teacher addTeacher(TeacherDto teacherDto) {
 		User user = userService.findUserDaoById(teacherDto.getUserId());
 		if (user != null) {
 			throw new IllegalArgumentException("Nome utente già in uso");

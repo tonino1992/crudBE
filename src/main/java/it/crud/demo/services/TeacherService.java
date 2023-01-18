@@ -97,20 +97,24 @@ public class TeacherService {
 		return exams;
 	}
 	
-	public Teacher addTeacher(TeacherDto teacherDto) {
-	    UserDto user = new UserDto();
-	    user.setUserId(teacherDto.getUserId());
-	    user.setPassword(teacherDto.getPassword());
-	    user.setRole(teacherDto.getRole());
-	    User userSaved = userService.addOrUpdateUser(user);
+	public Teacher addStudent(TeacherDto teacherDto) {
+		User user = userService.findUserDaoById(teacherDto.getUserId());
+		if (user != null) {
+			throw new IllegalArgumentException("Nome utente già in uso");
+		} else {
+			UserDto userDto = new UserDto();
+			userDto.setUserId(teacherDto.getUserId());
+			userDto.setPassword(teacherDto.getPassword());
+			userDto.setRole(teacherDto.getRole());
+			User userSaved = userService.addOrUpdateUser(userDto);
+			Teacher teacher = new Teacher();
+			teacher.setName(teacherDto.getName());
+			teacher.setSurname(teacherDto.getSurname());
+			teacher.setAge(teacherDto.getAge());
+			teacher.setUserId(userSaved);
 
-	    Teacher teacher= new Teacher();
-	    teacher.setName(teacherDto.getName());
-	    teacher.setSurname(teacherDto.getSurname());
-	    teacher.setAge(teacherDto.getAge());
-	    teacher.setUserId(userSaved);
-
-	    return teacherRepo.save(teacher);
+			return teacherRepo.save(teacher);
+		}
 	}
 
 	

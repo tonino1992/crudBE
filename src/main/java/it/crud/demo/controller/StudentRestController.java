@@ -41,13 +41,13 @@ public class StudentRestController {
 	}
 		
 	@PostMapping(value = "/add")
-	public ResponseEntity<Student> addTeacher(@RequestBody StudentDto studentDto) {
+	public ResponseEntity<Student> addStudent(@RequestBody StudentDto studentDto) {
 		Student student = studentService.addStudent(studentDto);
 		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}
 	
 	@PutMapping(value = "/update")
-	public ResponseEntity<Student> updateTeacher(@RequestBody StudentDto studentDto) {
+	public ResponseEntity<Student> updateStudent(@RequestBody StudentDto studentDto) {
 		Student student = studentService.updateStudent(studentDto);
 		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}

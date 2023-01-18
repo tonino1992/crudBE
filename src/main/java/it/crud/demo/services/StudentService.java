@@ -26,11 +26,9 @@ public class StudentService {
 		this.userService = userService;
 	}
 
-
 	public Student getStudentDaoById(int id) {
 		return studentRepo.findById(id).orElseThrow(() -> new StudentNotFoundException("Studente non trovato"));
 	}
-
 
 	public List<StudentDto> getAllStudents() {
 		List<StudentDto> listDto = new ArrayList<StudentDto>();
@@ -74,27 +72,27 @@ public class StudentService {
 	}
 
 	public Student addStudent(StudentDto studentDto) {
-	    UserDto user = new UserDto();
-	    user.setUserId(studentDto.getUserId());
-	    user.setPassword(studentDto.getPassword());
-	    user.setRole(studentDto.getRole());
-	    User userSaved = userService.addOrUpdateUser(user);
+		User user = userService.findUserDaoById(studentDto.getUserId());
+		if (user != null) {
+			throw new IllegalArgumentException("Nome utente già in uso");
+		} else {
+			UserDto userDto = new UserDto();
+			userDto.setUserId(studentDto.getUserId());
+			userDto.setPassword(studentDto.getPassword());
+			userDto.setRole(studentDto.getRole());
+			User userSaved = userService.addOrUpdateUser(userDto);
+			Student student = new Student();
+			student.setName(studentDto.getName());
+			student.setSurname(studentDto.getSurname());
+			student.setAge(studentDto.getAge());
+			student.setUserId(userSaved);
 
-	    Student student = new Student();
-	    student.setName(studentDto.getName());
-	    student.setSurname(studentDto.getSurname());
-	    student.setAge(studentDto.getAge());
-	    student.setUserId(userSaved);
-
-	    return studentRepo.save(student);
+			return studentRepo.save(student);
+		}
 	}
-
 
 	public void deleteStudent(int id) {
 		studentRepo.deleteById(id);
 	}
-
-
-
 
 }

@@ -52,7 +52,7 @@ public class UserService {
 	            return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(), teacher.getSurname(), teacher.getAge());
 	        }
 	    }
-	    throw new UserNotFoundException("user not valid");
+	    throw new UserNotFoundException("utente non valido");
 	}
 
 

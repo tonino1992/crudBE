@@ -28,6 +28,10 @@ public class UserService {
 	public User findUserDaoById(String userId) {
 		return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("Utente non trovato"));
 	}
+	
+	public User userExsits (String userId) {
+		return userRepo.findByUserId(userId);
+	}
 
 	public User addOrUpdateUser(UserDto userDto) {
 		User user = new User();

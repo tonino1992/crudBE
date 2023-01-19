@@ -72,7 +72,7 @@ public class StudentService {
 	}
 
 	public Student addStudent(StudentDto studentDto) {
-		User user = userService.findUserDaoById(studentDto.getUserId());
+		User user = userService.userExsits(studentDto.getUserId());
 		if (user != null) {
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {

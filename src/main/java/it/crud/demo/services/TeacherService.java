@@ -98,7 +98,7 @@ public class TeacherService {
 	}
 	
 	public Teacher addTeacher(TeacherDto teacherDto) {
-		User user = userService.findUserDaoById(teacherDto.getUserId());
+		User user = userService.userExsits(teacherDto.getUserId());
 		if (user != null) {
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {

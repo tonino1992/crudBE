@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,20 +25,20 @@ public class CourseRestController {
 	public CourseRestController(CourseService courseService) {
 		this.courseService = courseService;
 	}
-
+	@CrossOrigin
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<CourseJoinTeacherDto>> getAllCourses() {
 		List<CourseJoinTeacherDto> listDto = this.courseService.getAllCourses();
 		return new ResponseEntity<>(listDto, HttpStatus.OK);
 	}
-
+	@CrossOrigin
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CourseJoinTeacherDto> getCourseById(@PathVariable int id) {
 		CourseJoinTeacherDto courseDto = courseService.findCourseById(id);
 		return new ResponseEntity<>(courseDto, HttpStatus.OK);
 	}
 
-
+	@CrossOrigin
 	@PostMapping(value = "/add")
 	public ResponseEntity<Course> addCourse(@RequestBody CourseDto courseDto) {
 		Course course = courseService.addCourse(courseDto);

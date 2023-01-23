@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,25 +27,25 @@ public class StudentExamRestController {
 	public StudentExamRestController(StudentExamService studentExamService) {
 		this.studentExamService = studentExamService;
 	}
-		
+	@CrossOrigin
 	@PostMapping(value = "/booking")
 	public ResponseEntity<StudentExam> studentExamBooking(@RequestBody StudentExamDto studentExamDto){		
 		StudentExam studentExam = studentExamService.studentExamBooking(studentExamDto);
 		return new ResponseEntity<>(studentExam, HttpStatus.CREATED);
 	} 
-	
+	@CrossOrigin
 	@PutMapping(value = "/updatevote")
 	public ResponseEntity<StudentExam> studentExamUpdateVote(@RequestBody StudentExamDto studentExamDto){		
 		StudentExam studentExam = studentExamService.updateStudentExam(studentExamDto);
 		return new ResponseEntity<>(studentExam, HttpStatus.CREATED);
 	}
-	
+	@CrossOrigin
 	@GetMapping(value = "/{id}/examstodo")
 	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsToDo(@PathVariable int id){
 		List<ExamJoinCourseDto> exams = studentExamService.getExamsToDoByStudent(id);
 		return new ResponseEntity<>(exams, HttpStatus.OK);
 	}
-	
+	@CrossOrigin
 	@GetMapping(value = "/{id}/examsdone")
 	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsDone(@PathVariable int id){
 		List<ExamJoinCourseDto> exams = studentExamService.getExamsDoneByStudent(id);

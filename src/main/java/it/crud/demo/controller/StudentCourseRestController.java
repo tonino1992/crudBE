@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,20 +27,20 @@ public class StudentCourseRestController {
 	public StudentCourseRestController(StudentCourseService studentCourseService) {
 		this.studentCourseService = studentCourseService;
 	}
-
+	@CrossOrigin
 	@PostMapping(value = "/iscription")
 	public ResponseEntity<StudentCourse> studentCourseIscrioption(@RequestBody StudentCourseDto studentCourseDto) {
 		StudentCourse studentCourse = studentCourseService.studentCourseIscription(studentCourseDto);
 		return new ResponseEntity<>(studentCourse, HttpStatus.CREATED);
 	}
 	
-
+	@CrossOrigin
 	@GetMapping(value = "/{id}/students")
 	public ResponseEntity<List<StudentDto>> getStudentsByCourse(@PathVariable int id) {
 		List<StudentDto> students = studentCourseService.getStudentsbyCourse(id);
 		return new ResponseEntity<>(students, HttpStatus.OK);
 	}
-	
+	@CrossOrigin
 	@GetMapping(value = "/{id}/courses")
 	public ResponseEntity<List<CourseJoinTeacherDto>> getStudentCourses(@PathVariable int id){
 		List<CourseJoinTeacherDto> courses = studentCourseService.getCoursesByStudent(id);

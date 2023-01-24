@@ -92,6 +92,7 @@ public class StudentService {
 	}
 
 	public void deleteStudent(int id) {
+		userService.deleteUser(this.findStudentById(id).getUserId());
 		studentRepo.deleteById(id);
 	}
 

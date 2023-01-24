@@ -130,6 +130,7 @@ public class TeacherService {
 	}
 	
 	public void deleteTeacher(int id) {
+		userService.deleteUser(this.getTeacherById(id).getUserId());
 		teacherRepo.deleteById(id);
 	}
 

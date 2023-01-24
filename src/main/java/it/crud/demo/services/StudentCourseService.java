@@ -73,7 +73,7 @@ public class StudentCourseService {
 			studentDto.setId(student.getId());
 			studentDto.setName(student.getName());
 			studentDto.setSurname(student.getSurname());
-			studentDto.setAge(student.getAge());
+			studentDto.setDateOfBirth(student.getDateOfBirth());
 			studentDto.setUserId(student.getUserId().getUserId());
 			students.add(studentDto);
 		}

@@ -1,5 +1,6 @@
 package it.crud.demo.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,13 +29,14 @@ public class Student {
 
 	private String name;
 	private String surname;
-	private int age;
+	private LocalDate dateOfBirth;
 	
 	@OneToMany(mappedBy = "id.student")
 	@JsonManagedReference
 	private List<StudentCourse> courses;
 	
 	@OneToMany(mappedBy = "id.student")
+	@JsonManagedReference
 	private List<StudentExam> exams;
 	
 	@OneToOne
@@ -46,11 +48,11 @@ public class Student {
 	public Student() {
 	}
 
-	public Student(int id, String name, String surname, int age) {
+	public Student(int id, String name, String surname, LocalDate dateOfBirth) {
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
-		this.age = age;
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public int getId() {
@@ -77,12 +79,12 @@ public class Student {
 		this.surname = surname;
 	}
 
-	public int getAge() {
-		return age;
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public List<StudentCourse> getCourses() {

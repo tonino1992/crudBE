@@ -28,8 +28,8 @@ public class UserService {
 	public User findUserDaoById(String userId) {
 		return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("Utente non trovato"));
 	}
-	
-	public User userExsits (String userId) {
+
+	public User userExsits(String userId) {
 		return userRepo.findByUserId(userId);
 	}
 
@@ -46,18 +46,19 @@ public class UserService {
 	}
 
 	public PersonDto validateUser(String userId, String password) {
-	    User user = userRepo.findByUserId(userId);
-	    if (user != null && user.getPassword().equals(password)) {
-	        if (user.getRole().equals(UserRole.STUDENT)) {
-	            Student student = user.getStudent();
-	            return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(), student.getSurname(), student.getAge());
-	        } else if (user.getRole().equals(UserRole.TEACHER)) {
-	            Teacher teacher = user.getTeacher();
-	            return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(), teacher.getSurname(), teacher.getAge());
-	        }
-	    }
-	    throw new UserNotFoundException("utente non valido");
+		User user = userRepo.findByUserId(userId);
+		if (user != null && user.getPassword().equals(password)) {
+			if (user.getRole().equals(UserRole.STUDENT)) {
+				Student student = user.getStudent();
+				return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(),
+						student.getSurname(), student.getDateOfBirth());
+			} else if (user.getRole().equals(UserRole.TEACHER)) {
+				Teacher teacher = user.getTeacher();
+				return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(),
+						teacher.getSurname(), teacher.getDateOfBirth());
+			}
+		}
+		throw new UserNotFoundException("utente non valido");
 	}
-
 
 }

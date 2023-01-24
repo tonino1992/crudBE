@@ -29,6 +29,7 @@ public class TeacherRestController {
 	public TeacherRestController(TeacherService teacherService) {
 		this.teacherService = teacherService;
 	}
+	
 	@CrossOrigin
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<TeacherDto>> getAllTeachers() {

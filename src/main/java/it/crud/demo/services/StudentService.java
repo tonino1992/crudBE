@@ -39,7 +39,7 @@ public class StudentService {
 			studentDto.setId(student.getId());
 			studentDto.setName(student.getName());
 			studentDto.setSurname(student.getSurname());
-			studentDto.setAge(student.getAge());
+			studentDto.setDateOfBirth(student.getDateOfBirth());
 			studentDto.setUserId(student.getUserId().getUserId());
 
 			listDto.add(studentDto);
@@ -54,7 +54,7 @@ public class StudentService {
 		studentDto.setId(student.getId());
 		studentDto.setName(student.getName());
 		studentDto.setSurname(student.getSurname());
-		studentDto.setAge(student.getAge());
+		studentDto.setDateOfBirth(student.getDateOfBirth());
 		studentDto.setUserId(student.getUserId().getUserId());
 
 		return studentDto;
@@ -65,7 +65,7 @@ public class StudentService {
 		student.setId(studentDto.getId());
 		student.setName(studentDto.getName());
 		student.setSurname(studentDto.getSurname());
-		student.setAge(studentDto.getAge());
+		student.setDateOfBirth(studentDto.getDateOfBirth());
 		student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
 
 		return studentRepo.save(student);
@@ -84,7 +84,7 @@ public class StudentService {
 			Student student = new Student();
 			student.setName(studentDto.getName());
 			student.setSurname(studentDto.getSurname());
-			student.setAge(studentDto.getAge());
+			student.setDateOfBirth(studentDto.getDateOfBirth());
 			student.setUserId(userSaved);
 
 			return studentRepo.save(student);

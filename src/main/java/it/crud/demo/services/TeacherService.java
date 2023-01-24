@@ -38,7 +38,7 @@ public class TeacherService {
 			teacherDto.setId(teacher.getId());
 			teacherDto.setName(teacher.getName());
 			teacherDto.setSurname(teacher.getSurname());
-			teacherDto.setAge(teacher.getAge());
+			teacherDto.setDateOfBirth(teacher.getDateOfBirth());
 			teacherDto.setUserId(teacher.getUserId().getUserId());
 
 			listDto.add(teacherDto);
@@ -59,7 +59,7 @@ public class TeacherService {
 		teacherDto.setId(teacher.getId());
 		teacherDto.setName(teacher.getName());
 		teacherDto.setSurname(teacher.getSurname());
-		teacherDto.setAge(teacher.getAge());
+		teacherDto.setDateOfBirth(teacher.getDateOfBirth());
 		teacherDto.setUserId(teacher.getUserId().getUserId());
 
 		return teacherDto;
@@ -110,7 +110,7 @@ public class TeacherService {
 			Teacher teacher = new Teacher();
 			teacher.setName(teacherDto.getName());
 			teacher.setSurname(teacherDto.getSurname());
-			teacher.setAge(teacherDto.getAge());
+			teacher.setDateOfBirth(teacherDto.getDateOfBirth());
 			teacher.setUserId(userSaved);
 
 			return teacherRepo.save(teacher);
@@ -123,7 +123,7 @@ public class TeacherService {
 		teacher.setId(teacherDto.getId());
 		teacher.setName(teacherDto.getName());
 		teacher.setSurname(teacherDto.getSurname());
-		teacher.setAge(teacherDto.getAge());
+		teacher.setDateOfBirth(teacherDto.getDateOfBirth());
 		teacher.setUserId(userService.findUserDaoById(teacherDto.getUserId()));
 		
 		return teacherRepo.save(teacher);

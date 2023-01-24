@@ -1,5 +1,7 @@
 package it.crud.demo.dto;
 
+import java.time.LocalDate;
+
 import it.crud.demo.domain.enums.UserRole;
 
 public class PersonDto {
@@ -7,17 +9,17 @@ public class PersonDto {
     private String userId;
     private String name;
     private String surname;
-    private int age;
+    private LocalDate dateOfBirth;
     private UserRole role;
     
     public PersonDto() {};
 
-    public PersonDto(int id, String userId, String name, String surname, int age) {
+    public PersonDto(int id, String userId, String name, String surname, LocalDate dateOfBirth) {
     	this.id = id;
         this.userId = userId;
         this.name = name;
         this.surname = surname;
-        this.age = age;
+        this.dateOfBirth = dateOfBirth;
     }
     
     public int getId() {
@@ -52,12 +54,12 @@ public class PersonDto {
         this.surname = surname;
     }
 
-    public int getAge() {
-        return age;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
 	public UserRole getRole() {

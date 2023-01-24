@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.sql.Date;
 
@@ -38,6 +39,7 @@ public class Exam {
 	private Course course;
 	
 	@OneToMany(mappedBy = "id.exam")
+	@JsonManagedReference
 	private List<StudentExam> students;
 
 	public Exam() {

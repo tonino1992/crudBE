@@ -92,8 +92,9 @@ public class StudentService {
 	}
 
 	public void deleteStudent(int id) {
-		userService.deleteUser(this.findStudentById(id).getUserId());
+		String userId = this.getStudentDaoById(id).getUserId().getUserId();
 		studentRepo.deleteById(id);
-	}
+		userService.deleteUser(userId);
 
+	}
 }

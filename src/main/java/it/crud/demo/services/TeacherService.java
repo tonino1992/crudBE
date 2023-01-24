@@ -130,8 +130,9 @@ public class TeacherService {
 	}
 	
 	public void deleteTeacher(int id) {
-		userService.deleteUser(this.getTeacherById(id).getUserId());
+		String userId = this.getTeacherDaoById(id).getUserId().getUserId();
 		teacherRepo.deleteById(id);
+		userService.deleteUser(userId);
 	}
 
 }

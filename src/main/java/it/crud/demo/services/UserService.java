@@ -1,6 +1,12 @@
 package it.crud.demo.services;
 
+import jakarta.mail.internet.MimeMessage;
+
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import it.crud.demo.domain.Student;
@@ -18,11 +24,13 @@ import it.crud.demo.repositories.UserRepo;
 public class UserService {
 
 	private UserRepo userRepo;
+	private JavaMailSender javaMailSender;
 
 	@Autowired
-	public UserService(UserRepo userRepo) {
+	public UserService(UserRepo userRepo, JavaMailSender javaMailSender) {
 		super();
 		this.userRepo = userRepo;
+		this.javaMailSender = javaMailSender;
 	}
 
 	public User findUserDaoById(String userId) {
@@ -59,6 +67,24 @@ public class UserService {
 			}
 		}
 		throw new UserNotFoundException("utente non valido");
+	}
+
+	public void recuperaPassword(String email) throws UnsupportedEncodingException {
+		MimeMessage message = javaMailSender.createMimeMessage();
+		String text = "<a href= \"http://localhost:4200/login\"";
+		try {
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			if (helper != null) {
+				helper.setFrom("acampanale@studenti.apuliadigitalmaker.it");
+				helper.setTo("acampanale@studenti.apuliadigitalmaker.it");
+				helper.setSubject("Recupera password");
+				helper.setText("clicca per recuperare" + text, true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		javaMailSender.send(message);
 	}
 
 }

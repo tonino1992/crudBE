@@ -78,6 +78,7 @@ public class StudentService {
 		} else {
 			UserDto userDto = new UserDto();
 			userDto.setUserId(studentDto.getUserId());
+			userDto.setEmail(studentDto.getEmail());
 			userDto.setPassword(studentDto.getPassword());
 			userDto.setRole(studentDto.getRole());
 			User userSaved = userService.addOrUpdateUser(userDto);

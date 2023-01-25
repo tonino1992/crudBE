@@ -1,6 +1,9 @@
 package it.crud.demo.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +41,7 @@ public class UserRestController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	@CrossOrigin
-	@PostMapping("/login")
+	@PostMapping(value = "/login")
 	public ResponseEntity<PersonDto> login(@RequestBody UserDto userDto) {
 		PersonDto userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
 	    return new ResponseEntity<>(userDateDto, HttpStatus.OK);
@@ -47,6 +50,13 @@ public class UserRestController {
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
 		userService.deleteUser(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@CrossOrigin
+	@PostMapping(value = "/recuperapassword")
+	public ResponseEntity<?> recuperaPassword(@RequestBody String email) throws UnsupportedEncodingException{
+		userService.recuperaPassword(email);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

@@ -4,13 +4,14 @@ import java.time.LocalDate;
 
 import it.crud.demo.domain.enums.UserRole;
 
-public class TeacherDto extends PersonDto{
-	
-	private String password;
+public class TeacherDto extends PersonDto {
 
-	public TeacherDto(){
+	private String password;
+	private String email;
+
+	public TeacherDto() {
 		super();
-	};		
+	};
 
 	public TeacherDto(int id, String userId, String name, String surname, LocalDate dateOfBirth) {
 		super(id, userId, name, surname, dateOfBirth);
@@ -28,5 +29,13 @@ public class TeacherDto extends PersonDto{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-		
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

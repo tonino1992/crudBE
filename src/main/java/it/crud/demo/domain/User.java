@@ -14,25 +14,28 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-	
+
 	@Id
 	@Column(nullable = false)
 	private String userId;
+	@Column(nullable = false)
+	private String email;
 	@Column(nullable = false)
 	private String password;
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private UserRole role;
-	
+
 	@OneToOne(mappedBy = "userId")
 	@JsonManagedReference
 	private Teacher teacher;
-	
+
 	@OneToOne(mappedBy = "userId")
 	@JsonManagedReference
 	private Student student;
-	
-	public User() {}
+
+	public User() {
+	}
 
 	public User(String userId, String password, UserRole role, Teacher teacher, Student student) {
 		super();
@@ -49,6 +52,14 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -82,7 +93,5 @@ public class User {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-	
-	
-	
+
 }

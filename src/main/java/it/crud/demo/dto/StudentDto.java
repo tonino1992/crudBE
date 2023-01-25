@@ -7,6 +7,7 @@ import it.crud.demo.domain.enums.UserRole;
 public class StudentDto extends PersonDto{
 	
 	private String password;
+	private String email;
 	
 	public StudentDto(){
 		super();
@@ -28,4 +29,13 @@ public class StudentDto extends PersonDto{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 }

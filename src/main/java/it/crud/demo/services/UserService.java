@@ -3,10 +3,7 @@ package it.crud.demo.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +76,7 @@ public class UserService {
 		throw new UserNotFoundException("utente non valido");
 	}
 
-	public void recuperaPassword(String userId) throws UnsupportedEncodingException {
+	public void recuperaPassword(String userId) {
 		// Verifica se l'email esiste nel sistema
 		User user = userRepo.findByUserId(userId);
 		if (user == null) {
@@ -96,7 +93,7 @@ public class UserService {
 		resetPasswordTokenRepo.save(passwordToken);
 
 		// Crea il link per reimpostare la password
-		String resetLink = "http://localhost:8080/reset-password?token=" + URLEncoder.encode(resetToken, "UTF-8");
+		String resetLink = "http://localhost:4200/reset-password/" + resetToken;
 
 		// Invia l'email all'utente con il link per reimpostare la password
 		MimeMessage message = javaMailSender.createMimeMessage();

@@ -51,6 +51,7 @@ public class UserService {
 	public User addOrUpdateUser(UserDto userDto) {
 		User user = new User();
 		user.setUserId(userDto.getUserId());
+		user.setEmail(userDto.getEmail());
 		user.setPassword(userDto.getPassword());
 		user.setRole(userDto.getRole());
 		return userRepo.save(user);
@@ -80,7 +81,7 @@ public class UserService {
 		// Verifica se l'email esiste nel sistema
 		User user = userRepo.findByUserId(userId);
 		if (user == null) {
-			throw new UserNotFoundException("L'utente con l'email specificata non esiste");
+			throw new UserNotFoundException("L'utente non esiste");
 		}
 		// Crea un token univoco per reimpostare la password
 		SecureRandom random = new SecureRandom();

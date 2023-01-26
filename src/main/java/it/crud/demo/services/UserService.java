@@ -1,14 +1,20 @@
 package it.crud.demo.services;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import it.crud.demo.domain.ResetPasswordToken;
 import it.crud.demo.domain.Student;
 import it.crud.demo.domain.Teacher;
 import it.crud.demo.domain.User;
@@ -18,6 +24,7 @@ import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.TeacherDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.UserNotFoundException;
+import it.crud.demo.repositories.ResetPasswordTokenRepo;
 import it.crud.demo.repositories.UserRepo;
 
 @Service
@@ -25,12 +32,15 @@ public class UserService {
 
 	private UserRepo userRepo;
 	private JavaMailSender javaMailSender;
+	private ResetPasswordTokenRepo resetPasswordTokenRepo;
 
 	@Autowired
-	public UserService(UserRepo userRepo, JavaMailSender javaMailSender) {
+	public UserService(UserRepo userRepo, JavaMailSender javaMailSender,
+			ResetPasswordTokenRepo resetPasswordTokenRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.javaMailSender = javaMailSender;
+		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
 	}
 
 	public User findUserDaoById(String userId) {
@@ -69,22 +79,45 @@ public class UserService {
 		throw new UserNotFoundException("utente non valido");
 	}
 
-	public void recuperaPassword(String email) throws UnsupportedEncodingException {
+	public void recuperaPassword(String userId) throws UnsupportedEncodingException {
+		// Verifica se l'email esiste nel sistema
+		User user = userRepo.findByUserId(userId);
+		if (user == null) {
+			throw new UserNotFoundException("L'utente con l'email specificata non esiste");
+		}
+		// Crea un token univoco per reimpostare la password
+		SecureRandom random = new SecureRandom();
+		byte[] token = new byte[24];
+		random.nextBytes(token);
+		String resetToken = Base64.getEncoder().encodeToString(token);
+
+		// Crea una nuova istanza di ResetPasswordToken
+		ResetPasswordToken passwordToken = new ResetPasswordToken(resetToken, user);
+		resetPasswordTokenRepo.save(passwordToken);
+
+		// Crea il link per reimpostare la password
+		String resetLink = "http://localhost:8080/reset-password?token=" + URLEncoder.encode(resetToken, "UTF-8");
+
+		// Invia l'email all'utente con il link per reimpostare la password
 		MimeMessage message = javaMailSender.createMimeMessage();
-		String text = "<a href= \"http://localhost:4200/login\"";
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			if (helper != null) {
-				helper.setFrom("acampanale@studenti.apuliadigitalmaker.it");
-				helper.setTo("acampanale@studenti.apuliadigitalmaker.it");
-				helper.setSubject("Recupera password");
-				helper.setText("clicca per recuperare" + text, true);
-			}
-		} catch (Exception e) {
+			helper.setFrom("acampanale@studenti.apuliadigitalmaker.it");
+			// helper.setTo(user.getEmail());
+			helper.setTo("acampanale@studenti.apuliadigitalmaker.it");
+			helper.setSubject("Recupero password");
+			helper.setText("Ciao " + user.getUserId() + ",<br><br>"
+					+ "Abbiamo ricevuto una richiesta di recupero password per il tuo account.<br>"
+					+ "Per reimpostare la password, clicca sul seguente link:<br>" + "<a href='" + resetLink + "'>"
+					+ resetLink + "</a><br><br>" + "Se non hai richiesto il recupero password, ignora questa email.<br>"
+					+ "Il link è valido per 7 giorni a partire dalla data di richiesta.<br><br>"
+					+ "Saluti,<br>Il team di supporto", true);
+		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
+
 		javaMailSender.send(message);
+
 	}
 
 }

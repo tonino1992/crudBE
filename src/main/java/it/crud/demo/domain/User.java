@@ -1,5 +1,7 @@
 package it.crud.demo.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import it.crud.demo.domain.enums.UserRole;
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,16 +37,23 @@ public class User {
 	@JsonManagedReference
 	private Student student;
 
+	@OneToMany(mappedBy = "userId")
+	@JsonManagedReference
+	private List<ResetPasswordToken> tokens;
+
 	public User() {
 	}
 
-	public User(String userId, String password, UserRole role, Teacher teacher, Student student) {
+	public User(String userId, String email, String password, UserRole role, Teacher teacher, Student student,
+			List<ResetPasswordToken> tokens) {
 		super();
 		this.userId = userId;
+		this.email = email;
 		this.password = password;
 		this.role = role;
 		this.teacher = teacher;
 		this.student = student;
+		this.tokens = tokens;
 	}
 
 	public String getUserId() {
@@ -92,6 +102,14 @@ public class User {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+
+	public List<ResetPasswordToken> getToken() {
+		return tokens;
+	}
+
+	public void setToken(List<ResetPasswordToken> tokens) {
+		this.tokens = tokens;
 	}
 
 }

@@ -20,6 +20,7 @@ import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.TeacherDto;
 import it.crud.demo.dto.UserDto;
+import it.crud.demo.exceptions.IllegalPasswordException;
 import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.repositories.ResetPasswordTokenRepo;
 import it.crud.demo.repositories.UserRepo;
@@ -62,19 +63,23 @@ public class UserService {
 	}
 
 	public PersonDto validateUser(String userId, String password) {
-		User user = userRepo.findByUserId(userId);
-		if (user != null && user.getPassword().equals(password)) {
-			if (user.getRole().equals(UserRole.STUDENT)) {
-				Student student = user.getStudent();
-				return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(),
-						student.getSurname(), student.getDateOfBirth());
-			} else if (user.getRole().equals(UserRole.TEACHER)) {
-				Teacher teacher = user.getTeacher();
-				return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(),
-						teacher.getSurname(), teacher.getDateOfBirth());
-			}
+		User user = this.findUserDaoById(userId);
+
+		if (user.getPassword().equals(password)) {
+			throw new IllegalPasswordException("Password errata!");
 		}
-		throw new UserNotFoundException("utente non valido");
+		if (user.getRole().equals(UserRole.STUDENT)) {
+			Student student = user.getStudent();
+			return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(),
+					student.getSurname(), student.getDateOfBirth());
+		}
+		if (user.getRole().equals(UserRole.TEACHER)) {
+			Teacher teacher = user.getTeacher();
+			return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(),
+					teacher.getSurname(), teacher.getDateOfBirth());
+		}
+		
+		throw new IllegalStateException("Tipo di utente non supportato");
 	}
 
 	public void recuperaPassword(String userId) {

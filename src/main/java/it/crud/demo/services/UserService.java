@@ -3,8 +3,7 @@ package it.crud.demo.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import java.security.SecureRandom;
-import java.util.Base64;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -65,7 +64,7 @@ public class UserService {
 	public PersonDto validateUser(String userId, String password) {
 		User user = this.findUserDaoById(userId);
 
-		if (user.getPassword().equals(password)) {
+		if (!user.getPassword().equals(password)) {
 			throw new IllegalPasswordException("Password errata!");
 		}
 		if (user.getRole().equals(UserRole.STUDENT)) {
@@ -89,11 +88,9 @@ public class UserService {
 			throw new UserNotFoundException("L'utente non esiste");
 		}
 		// Crea un token univoco per reimpostare la password
-		SecureRandom random = new SecureRandom();
-		byte[] token = new byte[24];
-		random.nextBytes(token);
-		String resetToken = Base64.getEncoder().encodeToString(token);
-
+		UUID uuId = UUID.randomUUID();
+		String resetToken = uuId.toString();
+		
 		// Crea una nuova istanza di ResetPasswordToken
 		ResetPasswordToken passwordToken = new ResetPasswordToken(resetToken, user);
 		resetPasswordTokenRepo.save(passwordToken);

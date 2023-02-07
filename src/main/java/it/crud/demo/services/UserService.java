@@ -81,12 +81,10 @@ public class UserService {
 		throw new IllegalStateException("Tipo di utente non supportato");
 	}
 
-	public void recuperaPassword(String userId) {
+	public void recuperaPassword(String userId) throws MessagingException {
 		// Verifica se l'email esiste nel sistema
-		User user = userRepo.findByUserId(userId);
-		if (user == null) {
-			throw new UserNotFoundException("L'utente non esiste");
-		}
+		User user = this.findUserDaoById(userId);
+		
 		// Crea un token univoco per reimpostare la password
 		UUID uuId = UUID.randomUUID();
 		String resetToken = uuId.toString();
@@ -113,7 +111,7 @@ public class UserService {
 					+ "Il link è valido per 7 giorni a partire dalla data di richiesta.<br><br>"
 					+ "Saluti,<br>Il team di supporto", true);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			throw new MessagingException();
 		}
 
 		javaMailSender.send(message);

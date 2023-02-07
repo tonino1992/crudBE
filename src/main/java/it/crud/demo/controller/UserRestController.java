@@ -17,6 +17,7 @@ import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.IllegalPasswordException;
 import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.services.UserService;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -67,8 +68,14 @@ public class UserRestController {
 	@CrossOrigin
 	@PostMapping(value = "/recupera-password")
 	public ResponseEntity<?> recuperaPassword(@RequestBody String userId) {
+		try {
 		userService.recuperaPassword(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		} catch (MessagingException e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import it.crud.demo.domain.ResetPasswordToken;
@@ -52,7 +53,11 @@ public class UserService {
 		User user = new User();
 		user.setUserId(userDto.getUserId());
 		user.setEmail(userDto.getEmail());
-		user.setPassword(userDto.getPassword());
+
+		String password = userDto.getPassword();
+		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+		user.setPassword(hashedPassword);
+
 		user.setRole(userDto.getRole());
 		return userRepo.save(user);
 	}
@@ -64,7 +69,7 @@ public class UserService {
 	public PersonDto validateUser(String userId, String password) {
 		User user = this.findUserDaoById(userId);
 
-		if (!user.getPassword().equals(password)) {
+		if (!BCrypt.checkpw(password, user.getPassword())) {
 			throw new IllegalPasswordException("Password errata!");
 		}
 		if (user.getRole().equals(UserRole.STUDENT)) {
@@ -77,18 +82,18 @@ public class UserService {
 			return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(),
 					teacher.getSurname(), teacher.getDateOfBirth());
 		}
-		
+
 		throw new IllegalStateException("Tipo di utente non supportato");
 	}
 
 	public void recuperaPassword(String userId) throws MessagingException {
 		// Verifica se l'email esiste nel sistema
 		User user = this.findUserDaoById(userId);
-		
+
 		// Crea un token univoco per reimpostare la password
 		UUID uuId = UUID.randomUUID();
 		String resetToken = uuId.toString();
-		
+
 		// Crea una nuova istanza di ResetPasswordToken
 		ResetPasswordToken passwordToken = new ResetPasswordToken(resetToken, user);
 		resetPasswordTokenRepo.save(passwordToken);

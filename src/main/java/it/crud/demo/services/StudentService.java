@@ -72,10 +72,11 @@ public class StudentService {
 	}
 
 	public Student addStudent(StudentDto studentDto) {
-		User user = userService.userExsits(studentDto.getUserId());
-		if (user != null) {
+		if (userService.userExists(studentDto.getUserId())) {
+			
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {
+			System.out.println(userService.userExists(studentDto.getUserId()));
 			UserDto userDto = new UserDto();
 			userDto.setUserId(studentDto.getUserId());
 			userDto.setEmail(studentDto.getEmail());

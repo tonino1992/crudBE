@@ -32,8 +32,12 @@ public class UserRestController {
 	@CrossOrigin
 	@PutMapping(value = "/update")
 	public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
-		User user = userService.addOrUpdateUser(userDto);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		try {
+			User user = userService.addOrUpdateUser(userDto);
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@CrossOrigin
@@ -61,16 +65,20 @@ public class UserRestController {
 	@CrossOrigin
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
-		userService.deleteUser(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			userService.deleteUser(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@CrossOrigin
 	@PostMapping(value = "/recupera-password")
 	public ResponseEntity<?> recuperaPassword(@RequestBody String userId) {
 		try {
-		userService.recuperaPassword(userId);
-		return new ResponseEntity<>(HttpStatus.OK);
+			userService.recuperaPassword(userId);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		} catch (MessagingException e) {

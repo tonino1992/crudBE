@@ -45,9 +45,11 @@ public class UserService {
 		return userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("Utente non trovato"));
 	}
 
-	public User userExsits(String userId) {
-		return userRepo.findByUserId(userId);
+	public boolean userExists(String userId) {
+		System.out.println(userRepo.findByUserId(userId));
+	    return userRepo.findByUserId(userId) != null;
 	}
+
 
 	public User addOrUpdateUser(UserDto userDto) {
 		User user = new User();

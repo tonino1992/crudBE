@@ -97,9 +97,8 @@ public class TeacherService {
 		return exams;
 	}
 	
-	public Teacher addTeacher(TeacherDto teacherDto) {
-		User user = userService.userExsits(teacherDto.getUserId());
-		if (user != null) {
+	public Teacher addTeacher(TeacherDto teacherDto) {		
+		if (userService.userExists(teacherDto.getUserId())) {
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {
 			UserDto userDto = new UserDto();

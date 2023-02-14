@@ -22,42 +22,52 @@ import it.crud.demo.services.StudentService;
 @RequestMapping(value = "/students")
 public class StudentRestController {
 
-	StudentService studentService;	
-	
+	StudentService studentService;
+
 	public StudentRestController(StudentService studentService) {
 		super();
 		this.studentService = studentService;
 	}
+
 	@CrossOrigin
 	@GetMapping(value = "/all")
-	public ResponseEntity<List<StudentDto>> getAllStudents(){
+	public ResponseEntity<List<StudentDto>> getAllStudents() {
 		List<StudentDto> listDto = studentService.getAllStudents();
 		return new ResponseEntity<>(listDto, HttpStatus.OK);
 	}
+
 	@CrossOrigin
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<StudentDto> getStudentById(@PathVariable int id) {
 		StudentDto studentDto = studentService.findStudentById(id);
 		return new ResponseEntity<>(studentDto, HttpStatus.OK);
 	}
+
 	@CrossOrigin
 	@PostMapping(value = "/add")
 	public ResponseEntity<Student> addStudent(@RequestBody StudentDto studentDto) {
-		Student student = studentService.addStudent(studentDto);
-		return new ResponseEntity<>(student, HttpStatus.CREATED);
+		try {
+			Student student = studentService.addStudent(studentDto);
+			return new ResponseEntity<>(student, HttpStatus.CREATED);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		} catch (IllegalStateException e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
+
 	@CrossOrigin
 	@PutMapping(value = "/update")
 	public ResponseEntity<Student> updateStudent(@RequestBody StudentDto studentDto) {
 		Student student = studentService.updateStudent(studentDto);
 		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}
+
 	@CrossOrigin
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteTeacher(@PathVariable("id") int id) {
 		studentService.deleteStudent(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	
+
 }

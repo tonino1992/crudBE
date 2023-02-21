@@ -1,8 +1,9 @@
 package it.crud.demo.controller;
 
+import javax.mail.MessagingException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,6 @@ import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.IllegalPasswordException;
 import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.services.UserService;
-import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -29,7 +29,7 @@ public class UserRestController {
 		this.userService = userService;
 	}
 
-	@CrossOrigin
+
 	@PutMapping(value = "/update")
 	public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
 		try {
@@ -40,14 +40,14 @@ public class UserRestController {
 		}
 	}
 
-	@CrossOrigin
+
 	@PostMapping(value = "/add")
 	public ResponseEntity<User> addUser(@RequestBody UserDto userDto) {
 		User user = userService.addOrUpdateUser(userDto);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-	@CrossOrigin
+
 	@PostMapping(value = "/login")
 	public ResponseEntity<PersonDto> login(@RequestBody UserDto userDto) {
 		try {
@@ -62,7 +62,7 @@ public class UserRestController {
 		}
 	}
 
-	@CrossOrigin
+
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
 		try {
@@ -73,7 +73,7 @@ public class UserRestController {
 		}
 	}
 
-	@CrossOrigin
+
 	@PostMapping(value = "/recupera-password")
 	public ResponseEntity<?> recuperaPassword(@RequestBody String userId) {
 		try {

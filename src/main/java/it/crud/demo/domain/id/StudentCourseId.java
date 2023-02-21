@@ -2,20 +2,21 @@ package it.crud.demo.domain.id;
 
 import java.io.Serializable;
 
+import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import it.crud.demo.domain.Course;
 import it.crud.demo.domain.Student;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.ManyToOne;
 
 @SuppressWarnings("serial")
 @Embeddable
 public class StudentCourseId implements Serializable {
-	@ManyToOne	
+	@ManyToOne
 	@JsonBackReference
 	private Student student;
-	
+
 	@ManyToOne
 	@JsonBackReference
 	private Course course;
@@ -40,7 +41,5 @@ public class StudentCourseId implements Serializable {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	
-	
 
 }

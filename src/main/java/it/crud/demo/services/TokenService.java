@@ -2,6 +2,8 @@ package it.crud.demo.services;
 
 import java.time.LocalDate;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import it.crud.demo.domain.ResetPasswordToken;
@@ -10,7 +12,6 @@ import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.TokenExpiredException;
 import it.crud.demo.exceptions.TokenNotFoundException;
 import it.crud.demo.repositories.ResetPasswordTokenRepo;
-import jakarta.transaction.Transactional;
 
 @Service
 public class TokenService {
@@ -33,7 +34,7 @@ public class TokenService {
 		if (gettedToken.getExpireDate().isBefore(LocalDate.now())) {
 			throw new TokenExpiredException("Token scaduto");
 		}
-		return gettedToken.getUser().getUserId();
+		return gettedToken.getUserId().getUserId();
 	}
 	
 	@Transactional

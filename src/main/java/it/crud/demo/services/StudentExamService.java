@@ -37,7 +37,6 @@ public class StudentExamService {
 	}
 
 	public StudentExam studentExamBooking(StudentExamDto studentExamDto) throws StudentExamAlreadyBookedException {
-
 		Student student = studentService.getStudentDaoById(studentExamDto.getStudentId());
 		Exam exam = examService.getExamDaoById(studentExamDto.getExamId());
 		StudentExamId id = new StudentExamId(student, exam);
@@ -82,11 +81,12 @@ public class StudentExamService {
 	}
 
 	public StudentExam updateStudentExam(StudentExamDto studentExamDto) {
-		StudentExam studentExam = new StudentExam();
+		StudentExam studentExam = studentExamRepo
+				.findById(new StudentExamId(studentService.getStudentDaoById(studentExamDto.getStudentId()),
+						examService.getExamDaoById(studentExamDto.getExamId())))
+				.orElseThrow(() -> new IllegalArgumentException("Lo studente non ha prenotato questo esame"));
 		studentExam.setBookingDate(studentExamDto.getBookingDate());
 		studentExam.setVote(studentExamDto.getVote());
-		studentExam.getId().setExam(examService.getExamDaoById(studentExamDto.getExamId()));
-		studentExam.getId().setStudent(studentService.getStudentDaoById(studentExamDto.getStudentId()));
 		return studentExamRepo.save(studentExam);
 	}
 

@@ -3,21 +3,29 @@ package it.crud.demo.domain;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "students")
 public class Student {
 
@@ -43,10 +51,6 @@ public class Student {
 	@JoinColumn(name = "user_id", nullable = false)
 	@JsonBackReference
 	User userId;
-	
-
-	public Student() {
-	}
 
 	public Student(int id, String name, String surname, LocalDate dateOfBirth) {
 		this.id = id;
@@ -54,63 +58,5 @@ public class Student {
 		this.surname = surname;
 		this.dateOfBirth = dateOfBirth;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
-	public List<StudentCourse> getCourses() {
-		return courses;
-	}
-
-	public void setCourses(List<StudentCourse> courses) {
-		this.courses = courses;
-	}
-
-	public List<StudentExam> getExams() {
-		return exams;
-	}
-
-	public void setExams(List<StudentExam> exams) {
-		this.exams = exams;
-	}
-
-	public User getUserId() {
-		return userId;
-	}
-
-	public void setUserId(User userId) {
-		this.userId = userId;
-	}
-	
-	
 
 }

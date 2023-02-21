@@ -1,12 +1,13 @@
 package it.crud.demo.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import it.crud.demo.domain.Course;
 import it.crud.demo.domain.Exam;
 import it.crud.demo.domain.Teacher;
 import it.crud.demo.domain.User;
@@ -29,22 +30,17 @@ public class TeacherService {
 		this.userService = userService;
 	}
 
-	public List<TeacherDto> getAllTeacher() {
-		List<TeacherDto> listDto = new ArrayList<TeacherDto>();
+	public List<TeacherDto> getAllTeachers() {
 		List<Teacher> teachers = teacherRepo.findAll();
-
-		for (Teacher teacher : teachers) {
+		return teachers.stream().map(teacher -> {
 			TeacherDto teacherDto = new TeacherDto();
 			teacherDto.setId(teacher.getId());
 			teacherDto.setName(teacher.getName());
 			teacherDto.setSurname(teacher.getSurname());
 			teacherDto.setDateOfBirth(teacher.getDateOfBirth());
 			teacherDto.setUserId(teacher.getUserId().getUserId());
-
-			listDto.add(teacherDto);
-		}
-
-		return listDto;
+			return teacherDto;
+		}).collect(Collectors.toList());
 	}
 
 	public Teacher getTeacherDaoById(int id) {
@@ -67,24 +63,19 @@ public class TeacherService {
 
 	public List<CourseDto> getTeacherCourses(int id) {
 		Teacher teacher = this.getTeacherDaoById(id);
-		List<CourseDto> listCourseDto = new ArrayList<>();
-
-		for (Course course : teacher.getCourses()) {
+		return teacher.getCourses().stream().map(course -> {
 			CourseDto courseDto = new CourseDto();
 			courseDto.setId(course.getId());
 			courseDto.setSubject(course.getSubject());
 			courseDto.setHourAmount(course.getHourAmount());
 			courseDto.setTeacherId(course.getTeacher().getId());
-			listCourseDto.add(courseDto);
-		}
-		return listCourseDto;
+			return courseDto;
+		}).collect(Collectors.toList());
 	}
-	
-	public List<ExamJoinCourseDto> getTeacherExams(int id){
+
+	public List<ExamJoinCourseDto> getTeacherExams(int id) {
 		Teacher teacher = this.getTeacherDaoById(id);
-		List<ExamJoinCourseDto> exams = new ArrayList<>();
-		
-		for (Course course : teacher.getCourses()) {
+		return teacher.getCourses().stream().map(course -> {
 			Exam exam = course.getExam();
 			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
 			examDto.setId(exam.getId());
@@ -92,12 +83,12 @@ public class TeacherService {
 			examDto.setDay(exam.getDay());
 			examDto.setHour(exam.getHour());
 			examDto.setCourseSubject(exam.getCourse().getSubject());
-			exams.add(examDto);
-		}
-		return exams;
+			return examDto;
+		}).collect(Collectors.toList());
 	}
-	
-	public Teacher addTeacher(TeacherDto teacherDto) {		
+
+	@Transactional
+	public Teacher addTeacher(TeacherDto teacherDto) {
 		if (userService.userExists(teacherDto.getUserId())) {
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {
@@ -107,6 +98,7 @@ public class TeacherService {
 			userDto.setPassword(teacherDto.getPassword());
 			userDto.setRole(teacherDto.getRole());
 			User userSaved = userService.addOrUpdateUser(userDto);
+
 			Teacher teacher = new Teacher();
 			teacher.setName(teacherDto.getName());
 			teacher.setSurname(teacherDto.getSurname());
@@ -117,18 +109,16 @@ public class TeacherService {
 		}
 	}
 
-	
 	public Teacher updateTeacher(TeacherDto teacherDto) {
-		Teacher teacher = new Teacher();
-		teacher.setId(teacherDto.getId());
+		Teacher teacher = getTeacherDaoById(teacherDto.getId());
 		teacher.setName(teacherDto.getName());
 		teacher.setSurname(teacherDto.getSurname());
 		teacher.setDateOfBirth(teacherDto.getDateOfBirth());
 		teacher.setUserId(userService.findUserDaoById(teacherDto.getUserId()));
-		
 		return teacherRepo.save(teacher);
 	}
-	
+
+	@Transactional
 	public void deleteTeacher(int id) {
 		String userId = this.getTeacherDaoById(id).getUserId().getUserId();
 		teacherRepo.deleteById(id);

@@ -1,9 +1,11 @@
 package it.crud.demo.services;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+
 
 import java.util.UUID;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -47,9 +49,8 @@ public class UserService {
 
 	public boolean userExists(String userId) {
 		System.out.println(userRepo.findByUserId(userId));
-	    return userRepo.findByUserId(userId) != null;
+		return userRepo.findByUserId(userId) != null;
 	}
-
 
 	public User addOrUpdateUser(UserDto userDto) {
 		User user = new User();
@@ -61,6 +62,7 @@ public class UserService {
 		user.setPassword(hashedPassword);
 
 		user.setRole(userDto.getRole());
+
 		return userRepo.save(user);
 	}
 
@@ -74,19 +76,36 @@ public class UserService {
 		if (!BCrypt.checkpw(password, user.getPassword())) {
 			throw new IllegalPasswordException("Password errata!");
 		}
+
 		if (user.getRole().equals(UserRole.STUDENT)) {
+			StudentDto studentDto = new StudentDto();
 			Student student = user.getStudent();
-			return new StudentDto(student.getId(), student.getUserId().getUserId(), student.getName(),
-					student.getSurname(), student.getDateOfBirth());
+
+			studentDto.setId(student.getId());
+			studentDto.setUserId(student.getUserId().getUserId());
+			studentDto.setName(student.getName());
+			studentDto.setSurname(student.getSurname());
+			studentDto.setDateOfBirth(student.getDateOfBirth());
+
+			return studentDto;
 		}
+
 		if (user.getRole().equals(UserRole.TEACHER)) {
+			TeacherDto teacherDto = new TeacherDto();
 			Teacher teacher = user.getTeacher();
-			return new TeacherDto(teacher.getId(), teacher.getUserId().getUserId(), teacher.getName(),
-					teacher.getSurname(), teacher.getDateOfBirth());
+
+			teacherDto.setId(teacher.getId());
+			teacherDto.setUserId(teacher.getUserId().getUserId());
+			teacherDto.setName(teacher.getName());
+			teacherDto.setSurname(teacher.getSurname());
+			teacherDto.setDateOfBirth(teacher.getDateOfBirth());
+
+			return teacherDto;
 		}
 
 		throw new IllegalStateException("Tipo di utente non supportato");
 	}
+
 
 	public void recuperaPassword(String userId) throws MessagingException {
 		// Verifica se l'email esiste nel sistema

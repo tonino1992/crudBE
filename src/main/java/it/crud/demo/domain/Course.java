@@ -2,25 +2,28 @@ package it.crud.demo.domain;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "courses")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Course {
@@ -47,53 +50,13 @@ public class Course {
 	@JsonManagedReference
 	private List<StudentCourse> students;
 
-	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
+	public Course(int id, String subject, double hourAmount) {
+		super();
 		this.id = id;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public double getHourAmount() {
-		return hourAmount;
-	}
-
-	public void setHourAmount(double hourAmount) {
 		this.hourAmount = hourAmount;
 	}
 
-	public Teacher getTeacher() {
-		return teacher;
-	}
-
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
-
-	public Exam getExam() {
-		return exam;
-	}
-
-	public void setExam(Exam exam) {
-		this.exam = exam;
-	}
-
-	public List<StudentCourse> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<StudentCourse> students) {
-		this.students = students;
-	}
+	
 	
 }

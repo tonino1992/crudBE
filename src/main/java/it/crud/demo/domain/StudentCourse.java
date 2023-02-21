@@ -1,43 +1,22 @@
 package it.crud.demo.domain;
 
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import it.crud.demo.domain.id.StudentCourseId;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "students_courses")
 public class StudentCourse {
 	
 	@EmbeddedId
 	private StudentCourseId id;
-	
-	
-
-
-	public StudentCourse() {}
-
-
-
-
-	public StudentCourse(StudentCourseId id) {
-		this.id = id;
-	}
-
-
-
-
-	public StudentCourseId getId() {
-		return id;
-	}
-
-
-
-
-	public void setId(StudentCourseId id) {
-		this.id = id;
-	}
-	
-	
 		
 }

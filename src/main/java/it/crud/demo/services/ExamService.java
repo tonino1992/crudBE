@@ -1,7 +1,7 @@
 package it.crud.demo.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,26 +30,21 @@ public class ExamService {
 	}
 
 	public List<ExamJoinCourseDto> getAllExams() {
-		List<ExamJoinCourseDto> listDto = new ArrayList<ExamJoinCourseDto>();
-		List<Exam> exams = examRepo.findAll();
-
-		for (Exam exam : exams) {
-			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
-			examDto.setId(exam.getId());
-			examDto.setClassroom(exam.getClassroom());			
-			examDto.setDay(exam.getDay());
-			examDto.setHour(exam.getHour());
-			examDto.setCourseId(exam.getCourse().getId());
-			examDto.setCourseSubject(exam.getCourse().getSubject());
-			examDto.setTeacherName(exam.getCourse().getTeacher().getName());
-			examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());
-
-			listDto.add(examDto);
-		}
-
-		return listDto;
+	    List<Exam> exams = examRepo.findAll();
+	    return exams.stream().map(exam -> {
+	        ExamJoinCourseDto examDto = new ExamJoinCourseDto();
+	        examDto.setId(exam.getId());
+	        examDto.setClassroom(exam.getClassroom());
+	        examDto.setDay(exam.getDay());
+	        examDto.setHour(exam.getHour());
+	        examDto.setCourseId(exam.getCourse().getId());
+	        examDto.setCourseSubject(exam.getCourse().getSubject());
+	        examDto.setTeacherName(exam.getCourse().getTeacher().getName());
+	        examDto.setTeacherSurname(exam.getCourse().getTeacher().getSurname());
+	        return examDto;
+	    }).collect(Collectors.toList());
 	}
-
+	
 	public ExamJoinCourseDto getExamById(int id) {
 		Exam exam = this.getExamDaoById(id);
 		ExamJoinCourseDto examDto = new ExamJoinCourseDto();

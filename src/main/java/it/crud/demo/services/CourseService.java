@@ -1,7 +1,7 @@
 package it.crud.demo.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,22 +30,18 @@ public class CourseService {
 	}
 
 	public List<CourseJoinTeacherDto> getAllCourses() {
-		List<CourseJoinTeacherDto> listDto = new ArrayList<>();
-		List<Course> courses = courseRepo.findAll();
-
-		for (Course course : courses) {
-			CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
-			courseDto.setId(course.getId());
-			courseDto.setSubject(course.getSubject());
-			courseDto.setHourAmount(course.getHourAmount());
-			courseDto.setTeacherId(course.getTeacher().getId());
-			courseDto.setTeacherName(course.getTeacher().getName());
-			courseDto.setTeacherSurname(course.getTeacher().getSurname());
-			listDto.add(courseDto);
-		}
-
-		return listDto;
+	    return courseRepo.findAll().stream().map(course -> {
+	        CourseJoinTeacherDto courseDto = new CourseJoinTeacherDto();
+	        courseDto.setId(course.getId());
+	        courseDto.setSubject(course.getSubject());
+	        courseDto.setHourAmount(course.getHourAmount());
+	        courseDto.setTeacherId(course.getTeacher().getId());
+	        courseDto.setTeacherName(course.getTeacher().getName());
+	        courseDto.setTeacherSurname(course.getTeacher().getSurname());
+	        return courseDto;
+	    }).collect(Collectors.toList());
 	}
+
 
 	public Course addCourse(CourseDto courseDto) {
 		Course course = new Course();

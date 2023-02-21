@@ -2,14 +2,21 @@ package it.crud.demo.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResetPasswordToken {
 
 	@Id
@@ -21,36 +28,10 @@ public class ResetPasswordToken {
 	@JsonBackReference
 	private User userId;
 
-	public ResetPasswordToken() {
-	}
-
 	public ResetPasswordToken(String token, User userId) {
 		this.token = token;
 		this.userId = userId;
 		this.expireDate = LocalDate.now().plusDays(7);
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public LocalDate getExpireDate() {
-		return expireDate;
-	}
-
-	public void setExpireDate(LocalDate expireDate) {
-		this.expireDate = expireDate;
-	}
-
-	public User getUser() {
-		return userId;
-	}
-
-	public void setUser(User userId) {
-		this.userId = userId;
-	}
 }

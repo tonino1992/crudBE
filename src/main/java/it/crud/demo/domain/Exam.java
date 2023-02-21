@@ -1,25 +1,31 @@
 package it.crud.demo.domain;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import java.sql.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "exams")
 public class Exam {
 
@@ -42,9 +48,6 @@ public class Exam {
 	@JsonManagedReference
 	private List<StudentExam> students;
 
-	public Exam() {
-	}
-
 	public Exam(int id, Date date, String classroom, Course course) {
 		this.id = id;
 		this.day = date;
@@ -52,53 +55,6 @@ public class Exam {
 		this.course = course;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public Date getDay() {
-		return day;
-	}
-
-	public void setDay(Date day) {
-		this.day = day;
-	}
-
-	public Time getHour() {
-		return hour;
-	}
-
-	public void setHour(Time hour) {
-		this.hour = hour;
-	}
-
-	public String getClassroom() {
-		return classroom;
-	}
-
-	public void setClassroom(String classroom) {
-		this.classroom = classroom;
-	}
-
-	public Course getCourse() {
-		return course;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
-	}
-
-	@Override
-	public String toString() {
-		return "Exam [id=" + id + ", day=" + day + ", hour=" + hour + ", classroom=" + classroom + ", course=" + course
-				+ "]";
-	}
-	
-	
 }
 
 

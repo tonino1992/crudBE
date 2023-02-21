@@ -2,7 +2,6 @@ package it.crud.demo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +24,7 @@ public class TokenRestController {
 		this.tokenService = tokenService;
 	}
 
-	@CrossOrigin
+
     @PostMapping("/verify-token")
     public ResponseEntity<String> verifyTokenValidity(@RequestBody String token) {
         try {
@@ -38,7 +37,7 @@ public class TokenRestController {
         }
     }
 	
-	@CrossOrigin
+
 	@PutMapping("/change-password")
 	 public ResponseEntity<?> changePassword(@RequestBody UserDto userDto) {
         tokenService.changePassword(userDto);

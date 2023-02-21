@@ -1,7 +1,9 @@
 package it.crud.demo.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,6 @@ import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.StudentNotFoundException;
 import it.crud.demo.repositories.StudentRepo;
-
 @Service
 public class StudentService {
 
@@ -31,46 +32,42 @@ public class StudentService {
 	}
 
 	public List<StudentDto> getAllStudents() {
-		List<StudentDto> listDto = new ArrayList<StudentDto>();
-		List<Student> students = studentRepo.findAll();
-
-		for (Student student : students) {
-			StudentDto studentDto = new StudentDto();
-			studentDto.setId(student.getId());
-			studentDto.setName(student.getName());
-			studentDto.setSurname(student.getSurname());
-			studentDto.setDateOfBirth(student.getDateOfBirth());
-			studentDto.setUserId(student.getUserId().getUserId());
-
-			listDto.add(studentDto);
-		}
-
-		return listDto;
+	    return studentRepo.findAll().stream()
+	        .map(student -> {
+	            StudentDto studentDto = new StudentDto();
+	            studentDto.setId(student.getId());
+	            studentDto.setName(student.getName());
+	            studentDto.setSurname(student.getSurname());
+	            studentDto.setDateOfBirth(student.getDateOfBirth());
+	            studentDto.setUserId(student.getUserId().getUserId());
+	            return studentDto;
+	        })
+	        .collect(Collectors.toList());
 	}
 
 	public StudentDto findStudentById(int id) {
-		Student student = this.getStudentDaoById(id);
-		StudentDto studentDto = new StudentDto();
-		studentDto.setId(student.getId());
-		studentDto.setName(student.getName());
-		studentDto.setSurname(student.getSurname());
-		studentDto.setDateOfBirth(student.getDateOfBirth());
-		studentDto.setUserId(student.getUserId().getUserId());
+	    Student student = this.getStudentDaoById(id);
+	    StudentDto studentDto = new StudentDto();
+	    studentDto.setId(student.getId());
+	    studentDto.setName(student.getName());
+	    studentDto.setSurname(student.getSurname());
+	    studentDto.setDateOfBirth(student.getDateOfBirth());
+	    studentDto.setUserId(student.getUserId().getUserId());
 
-		return studentDto;
+	    return studentDto;
 	}
 
 	public Student updateStudent(StudentDto studentDto) {
-		Student student = new Student();
-		student.setId(studentDto.getId());
-		student.setName(studentDto.getName());
-		student.setSurname(studentDto.getSurname());
-		student.setDateOfBirth(studentDto.getDateOfBirth());
-		student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
-
-		return studentRepo.save(student);
+	    Student student = this.getStudentDaoById(studentDto.getId());
+	    student.setName(studentDto.getName());
+	    student.setSurname(studentDto.getSurname());
+	    student.setDateOfBirth(studentDto.getDateOfBirth());
+	    student.setUserId(userService.findUserDaoById(studentDto.getUserId()));
+	    return studentRepo.save(student);
 	}
 
+
+	@Transactional
 	public Student addStudent(StudentDto studentDto) {
 		if (userService.userExists(studentDto.getUserId())) {
 			
@@ -93,10 +90,11 @@ public class StudentService {
 		}
 	}
 
+	@Transactional
 	public void deleteStudent(int id) {
 		String userId = this.getStudentDaoById(id).getUserId().getUserId();
 		studentRepo.deleteById(id);
 		userService.deleteUser(userId);
-
 	}
+	
 }

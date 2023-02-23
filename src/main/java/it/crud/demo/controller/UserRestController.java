@@ -1,5 +1,9 @@
 package it.crud.demo.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.security.PermitAll;
 import javax.mail.MessagingException;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.IllegalPasswordException;
 import it.crud.demo.exceptions.UserNotFoundException;
+import it.crud.demo.services.JwtService;
 import it.crud.demo.services.UserService;
 
 @RestController
@@ -24,11 +29,12 @@ import it.crud.demo.services.UserService;
 public class UserRestController {
 
 	private UserService userService;
+	private JwtService jwtService;
 
-	public UserRestController(UserService userService) {
+	public UserRestController(UserService userService, JwtService jwtService) {
 		this.userService = userService;
+		this.jwtService = jwtService;
 	}
-
 
 	@PutMapping(value = "/update")
 	public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
@@ -40,19 +46,32 @@ public class UserRestController {
 		}
 	}
 
-
 	@PostMapping(value = "/add")
 	public ResponseEntity<User> addUser(@RequestBody UserDto userDto) {
 		User user = userService.addOrUpdateUser(userDto);
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-
+	@PermitAll
 	@PostMapping(value = "/login")
-	public ResponseEntity<PersonDto> login(@RequestBody UserDto userDto) {
+	public ResponseEntity<String> login(@RequestBody UserDto userDto) {
 		try {
+			// Autenticazione dell'utente e raccolta dei suoi dati
 			PersonDto userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
-			return new ResponseEntity<>(userDateDto, HttpStatus.OK);
+
+			// Creazione dei claims da includere nel token JWT
+			Map<String, Object> claims = new HashMap<>();
+			claims.put("sub", userDto.getUserId());
+			claims.put("name", userDateDto.getName());
+			claims.put("surname", userDateDto.getSurname());
+			claims.put("birthDate", userDateDto.getDateOfBirth());
+			claims.put("role", userDateDto.getRole());
+
+			// Generazione del token JWT
+			String token = jwtService.createToken(claims, userDto.getUserId());
+
+			// Restituzione del token JWT nella risposta HTTP
+			return new ResponseEntity<>(token, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		} catch (IllegalPasswordException e) {
@@ -61,7 +80,6 @@ public class UserRestController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
@@ -72,7 +90,6 @@ public class UserRestController {
 			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	@PostMapping(value = "/recupera-password")
 	public ResponseEntity<?> recuperaPassword(@RequestBody String userId) {

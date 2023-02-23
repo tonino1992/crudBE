@@ -1,7 +1,5 @@
 package it.crud.demo.services;
 
-
-
 import java.util.UUID;
 
 import javax.mail.MessagingException;

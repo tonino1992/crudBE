@@ -69,8 +69,7 @@ public class StudentService {
 
 	@Transactional
 	public Student addStudent(StudentDto studentDto) {
-		if (userService.userExists(studentDto.getUserId())) {
-			
+		if (userService.userExists(studentDto.getUserId())) {			
 			throw new IllegalArgumentException("Nome utente già in uso");
 		} else {
 			System.out.println(userService.userExists(studentDto.getUserId()));

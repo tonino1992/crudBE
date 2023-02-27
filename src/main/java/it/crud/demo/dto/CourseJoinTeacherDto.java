@@ -12,6 +12,7 @@ public class CourseJoinTeacherDto {
 	private int id;
 	private String subject;
 	private double hourAmount;
+	private boolean isDone;
 	private int teacherId;
 	private String teacherName;
 	private String teacherSurname;

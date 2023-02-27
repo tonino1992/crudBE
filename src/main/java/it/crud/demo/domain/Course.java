@@ -36,6 +36,7 @@ public class Course {
 
 	private String subject;
 	private double hourAmount;
+	private boolean isDone;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id", nullable = false)

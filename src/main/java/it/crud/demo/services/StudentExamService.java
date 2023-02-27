@@ -52,12 +52,12 @@ public class StudentExamService {
 
 	public List<ExamJoinCourseDto> getExamsToDoByStudent(int id) {
 		Student student = studentService.getStudentDaoById(id);
-		return getExamsByStudent(student.getExams(), e -> e.getVote() == 0);
+		return getExamsByStudent(student.getExams(), e -> !e.getId().getExam().isDone());
 	}
 
 	public List<ExamJoinCourseDto> getExamsDoneByStudent(int id) {
 		Student student = studentService.getStudentDaoById(id);
-		return getExamsByStudent(student.getExams(), e -> e.getVote() > 0);
+		return getExamsByStudent(student.getExams(), e -> e.getId().getExam().isDone());
 	}
 
 	private List<ExamJoinCourseDto> getExamsByStudent(List<StudentExam> exams, Predicate<StudentExam> filter) {

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import it.crud.demo.domain.Course;
 import it.crud.demo.dto.CourseDto;
 import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.exceptions.CourseNotFoundException;
+import it.crud.demo.exceptions.TeacherNotFoundException;
 import it.crud.demo.services.CourseService;
 
 @RestController
@@ -41,6 +43,22 @@ public class CourseRestController {
 	        return new ResponseEntity<>(courseDto, HttpStatus.OK);
 	    } catch (CourseNotFoundException e) {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	}
+	
+	@PutMapping(value = "/update")
+	public ResponseEntity<Course> updateCourse(@RequestBody CourseDto courseDto) {
+	    try {
+	        Course updatedCourse = courseService.updateCourse(courseDto);
+	        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
+	    } catch (CourseNotFoundException e) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    } catch (TeacherNotFoundException e) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    } catch (IllegalArgumentException e) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
 

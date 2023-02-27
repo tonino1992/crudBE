@@ -16,51 +16,67 @@ import org.springframework.web.bind.annotation.RestController;
 import it.crud.demo.domain.Exam;
 import it.crud.demo.dto.ExamDto;
 import it.crud.demo.dto.ExamJoinCourseDto;
-import it.crud.demo.dto.StudentDto;
+import it.crud.demo.exceptions.CourseNotFoundException;
+import it.crud.demo.exceptions.ExamNotFoundException;
 import it.crud.demo.services.ExamService;
-import it.crud.demo.services.StudentExamService;
 
 @RestController
 @RequestMapping(value = "/exams")
 public class ExamRestController {
 
 	private ExamService examService;
-	private StudentExamService studentExamService;
 
 	public ExamRestController(ExamService examService) {
 		super();
 		this.examService = examService;
 	}
 
-	@GetMapping(value = "/all")
+	@GetMapping("/all")
 	public ResponseEntity<List<ExamJoinCourseDto>> getAllExams() {
-		List<ExamJoinCourseDto> listDto = examService.getAllExams();
-		return new ResponseEntity<>(listDto, HttpStatus.OK);
+		try {
+			List<ExamJoinCourseDto> exams = examService.getAllExams();
+			return new ResponseEntity<>(exams, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ExamJoinCourseDto> getExamById(@PathVariable("id") int id) {
-		ExamJoinCourseDto examDto = examService.getExamById(id);
-		return new ResponseEntity<>(examDto, HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/{id}/students")
-	public ResponseEntity<List<StudentDto>> getStudentsByExam(@PathVariable("id") int id) {
-		List<StudentDto> students = studentExamService.getStudentsByExam(id);
-		return new ResponseEntity<>(students, HttpStatus.OK);
+		try {
+			ExamJoinCourseDto examDto = examService.getExamById(id);
+			return new ResponseEntity<>(examDto, HttpStatus.OK);
+		} catch (ExamNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PostMapping(value = "/add")
-	public ResponseEntity<Exam> addTeacher(@RequestBody ExamDto examDto) {
-		Exam exam = examService.addExam(examDto);
-		return new ResponseEntity<>(exam, HttpStatus.CREATED);
-	}
-
+	  public ResponseEntity<Exam> addExam(@RequestBody ExamDto examDto) {
+        try {
+            Exam exam = examService.addExam(examDto);
+            return new ResponseEntity<>(exam, HttpStatus.CREATED);
+        } catch (CourseNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	@PutMapping(value = "/update")
-	public ResponseEntity<Exam> updateExam(@RequestBody ExamDto examDto){
-		Exam exam = examService.updateExam(examDto);				
-		return new ResponseEntity<>(exam, HttpStatus.OK);
-	}
+	 public ResponseEntity<Exam> updateExam(@RequestBody ExamDto examDto) {
+        try {
+            Exam exam = examService.updateExam(examDto);
+            return new ResponseEntity<>(exam, HttpStatus.OK);
+        } catch (ExamNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CourseNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteExam(@PathVariable("id") int id) {

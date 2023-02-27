@@ -16,6 +16,7 @@ public class ExamDto {
 	private Date day;
 	private Time hour;
 	private String classroom;
+	private boolean isDone;
 	private int courseId;
 	
 

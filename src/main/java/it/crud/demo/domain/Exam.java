@@ -38,6 +38,7 @@ public class Exam {
 	private Date day;
 	private Time hour;
 	private String classroom;
+	private boolean isDone;
 
 	@OneToOne
 	@JoinColumn(name = "course_id")

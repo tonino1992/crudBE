@@ -2,6 +2,8 @@ package it.crud.demo.controller;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +32,7 @@ public class StudentRestController {
 		this.studentService = studentService;
 	}
 
-
+	@PermitAll
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<StudentDto>> getAllStudents() {
 		try {
@@ -40,7 +42,6 @@ public class StudentRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<StudentDto> getStudentById(@PathVariable int id) {
@@ -66,7 +67,6 @@ public class StudentRestController {
 		}
 	}
 
-
 	@PutMapping(value = "/update")
 	public ResponseEntity<Student> updateStudent(@RequestBody StudentDto studentDto) {
 		try {
@@ -80,7 +80,6 @@ public class StudentRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteStudent(@PathVariable("id") int id) {

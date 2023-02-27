@@ -17,6 +17,7 @@ public class ExamJoinCourseDto {
 	private Time hour;
 	private int vote;
 	private String classroom;
+	private boolean isDone;
 	private int courseId;
 	private String courseSubject;
 	private String teacherName;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.crud.demo.domain.StudentExam;
 import it.crud.demo.dto.ExamJoinCourseDto;
+import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.StudentExamDto;
 import it.crud.demo.exceptions.ExamNotFoundException;
 import it.crud.demo.exceptions.StudentExamAlreadyBookedException;
@@ -77,7 +78,18 @@ public class StudentExamRestController {
 	    }
 	}
 
-
+	@GetMapping(value = "/{id}/students")
+	public ResponseEntity<List<StudentDto>> getStudentsByExam(@PathVariable("id") int id) {
+	    try {
+	        List<StudentDto> listDto = studentExamService.getStudentsByExam(id);
+	        return new ResponseEntity<>(listDto, HttpStatus.OK);
+	    } catch (ExamNotFoundException e) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
 	@GetMapping(value = "/{id}/examsdone")
 	public ResponseEntity<List<ExamJoinCourseDto>> getStudentExamsDone(@PathVariable int id) {
 	    try {

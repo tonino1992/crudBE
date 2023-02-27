@@ -13,5 +13,6 @@ public class CourseDto {
 	private String subject;
 	private double hourAmount;
 	private int teacherId;
+	private boolean isDone;
 		
 }

@@ -58,13 +58,15 @@ public class UserRestController {
 		try {
 			// Autenticazione dell'utente e raccolta dei suoi dati
 			PersonDto userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
+			
+			
 
 			// Creazione dei claims da includere nel token JWT
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("sub", userDto.getUserId());
 			claims.put("name", userDateDto.getName());
 			claims.put("surname", userDateDto.getSurname());
-			claims.put("birthDate", userDateDto.getDateOfBirth());
+			//claims.put("birthDate", userDateDto.getDateOfBirth());
 			claims.put("role", userDateDto.getRole());
 
 			// Generazione del token JWT

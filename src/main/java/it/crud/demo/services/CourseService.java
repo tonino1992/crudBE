@@ -35,6 +35,7 @@ public class CourseService {
 	        courseDto.setId(course.getId());
 	        courseDto.setSubject(course.getSubject());
 	        courseDto.setHourAmount(course.getHourAmount());
+	        courseDto.setDone(course.isDone());
 	        courseDto.setTeacherId(course.getTeacher().getId());
 	        courseDto.setTeacherName(course.getTeacher().getName());
 	        courseDto.setTeacherSurname(course.getTeacher().getSurname());
@@ -48,6 +49,7 @@ public class CourseService {
 		Teacher teacher = teacherService.getTeacherDaoById(courseDto.getTeacherId());
 		course.setSubject(courseDto.getSubject());
 		course.setHourAmount(courseDto.getHourAmount());
+		course.setDone(false);
 		course.setTeacher(teacher);
 
 		return courseRepo.save(course);
@@ -59,11 +61,24 @@ public class CourseService {
 		courseDto.setId(course.getId());
 		courseDto.setSubject(course.getSubject());
 		courseDto.setHourAmount(course.getHourAmount());
+		courseDto.setDone(course.isDone());
 		courseDto.setTeacherId(course.getTeacher().getId());
 		courseDto.setTeacherName(course.getTeacher().getName());
 		courseDto.setTeacherSurname(course.getTeacher().getSurname());
 
 		return courseDto;
+	}
+
+	public Course updateCourse(CourseDto courseDto) {
+		Course course = new Course();
+		course.setId(courseDto.getId());
+		course.setSubject(courseDto.getSubject());
+		course.setHourAmount(courseDto.getHourAmount());
+		course.setDone(courseDto.isDone());
+		course.setTeacher(this.teacherService.getTeacherDaoById(courseDto.getTeacherId()));
+		
+		return courseRepo.save(course);
+		
 	}
 
 }

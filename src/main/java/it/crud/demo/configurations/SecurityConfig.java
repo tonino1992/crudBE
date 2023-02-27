@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests()
-                .antMatchers("/users/login").permitAll()  // consenti l'accesso a tutti per questa URL
+                .antMatchers("/users/login", "http://localhost:8090/swagger-ui/").permitAll()  // consenti l'accesso a tutti per questa URL
                 .antMatchers("/teachers/**").hasRole("TEACHER")  // consenti l'accesso solo ai teacher
                 .antMatchers("/students/**").hasRole("STUDENT")  // consenti l'accesso solo agli studenti
                 .anyRequest().authenticated()  // richiedi l'autenticazione per tutte le altre URL

@@ -8,6 +8,9 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +29,7 @@ import it.crud.demo.repositories.ResetPasswordTokenRepo;
 import it.crud.demo.repositories.UserRepo;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
 	private UserRepo userRepo;
 	private JavaMailSender javaMailSender;
@@ -104,7 +107,6 @@ public class UserService {
 		throw new IllegalStateException("Tipo di utente non supportato");
 	}
 
-
 	public void recuperaPassword(String userId) throws MessagingException {
 		// Verifica se l'email esiste nel sistema
 		User user = this.findUserDaoById(userId);
@@ -140,6 +142,15 @@ public class UserService {
 
 		javaMailSender.send(message);
 
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepo.findByUserId(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return user;
 	}
 
 }

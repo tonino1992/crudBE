@@ -2,6 +2,7 @@ package it.crud.demo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import it.crud.demo.exceptions.TokenExpiredException;
 import it.crud.demo.exceptions.TokenNotFoundException;
 import it.crud.demo.services.TokenService;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/token")
 public class TokenRestController {

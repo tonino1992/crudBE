@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import it.crud.demo.exceptions.StudentCourseAlreadyExistsException;
 import it.crud.demo.exceptions.StudentNotFoundException;
 import it.crud.demo.services.StudentCourseService;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/studentcourses")
 public class StudentCourseRestController {
@@ -39,6 +41,12 @@ public class StudentCourseRestController {
 		} catch (StudentCourseAlreadyExistsException e) {
 			// error 409
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} catch (StudentNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}catch (CourseNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -50,6 +58,8 @@ public class StudentCourseRestController {
 			return new ResponseEntity<>(students, HttpStatus.OK);
 		} catch (CourseNotFoundException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}catch (Exception e ) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -61,6 +71,8 @@ public class StudentCourseRestController {
 			return new ResponseEntity<>(courses, HttpStatus.OK);
 		} catch (StudentNotFoundException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (Exception e ) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

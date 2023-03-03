@@ -27,26 +27,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
     private JwtService jwtService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests()
-                .antMatchers("/users/login", "http://localhost:8090/swagger-ui/").permitAll()  // consenti l'accesso a tutti per questa URL
-                .antMatchers("/teachers/**").hasRole("TEACHER")  // consenti l'accesso solo ai teacher
-                .antMatchers("/students/**").hasRole("STUDENT")  // consenti l'accesso solo agli studenti
+                .antMatchers("/users/login", "http://localhost:8090/swagger-ui/", "/users/recupera-password",
+                		"/students/add", "/teachers/add").permitAll()  // consenti l'accesso a tutti per questa URL
                 .anyRequest().authenticated()  // richiedi l'autenticazione per tutte le altre URL
                 .and()
                 .formLogin().and()
                 .httpBasic().and()
                 .csrf().disable();
         
-        http.addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+    
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        return new JwtAuthenticationFilter(userDetailsService, jwtService);
     }
 
     @Bean

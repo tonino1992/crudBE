@@ -75,13 +75,14 @@ public class TeacherService {
 
 	public List<ExamJoinCourseDto> getTeacherExams(int id) {
 		Teacher teacher = this.getTeacherDaoById(id);
-		return teacher.getCourses().stream().map(course -> {
+		return teacher.getCourses().stream().filter(course -> course.getExam() != null).map(course -> {
 			Exam exam = course.getExam();
 			ExamJoinCourseDto examDto = new ExamJoinCourseDto();
 			examDto.setId(exam.getId());
 			examDto.setClassroom(exam.getClassroom());
 			examDto.setDay(exam.getDay());
 			examDto.setHour(exam.getHour());
+			examDto.setDone(exam.isDone());
 			examDto.setCourseSubject(exam.getCourse().getSubject());
 			return examDto;
 		}).collect(Collectors.toList());

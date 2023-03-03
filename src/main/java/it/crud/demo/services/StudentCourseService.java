@@ -52,6 +52,8 @@ public class StudentCourseService {
 	        courseDto.setId(course.getId());
 	        courseDto.setHourAmount(course.getHourAmount());
 	        courseDto.setSubject(course.getSubject());
+	        courseDto.setDone(course.isDone());
+	        courseDto.setTeacherId(course.getTeacher().getId());
 	        courseDto.setTeacherName(course.getTeacher().getName());
 	        courseDto.setTeacherSurname(course.getTeacher().getSurname());
 	        return courseDto;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import it.crud.demo.exceptions.CourseNotFoundException;
 import it.crud.demo.exceptions.TeacherNotFoundException;
 import it.crud.demo.services.CourseService;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/courses")
 public class CourseRestController {
@@ -68,10 +70,23 @@ public class CourseRestController {
 	    try {
 	        Course course = courseService.addCourse(courseDto);
 	        return new ResponseEntity<>(course, HttpStatus.CREATED);
+	    } catch (TeacherNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Teacher not found");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+	    }
+	}
+	
+	@GetMapping(value = "/exams/{courseId}")
+	public ResponseEntity<?> getExamIdByCourseId(@PathVariable int courseId) {
+	    try {
+	        int examId = courseService.getExamIdByCourseId(courseId);
+	        return new ResponseEntity<>(examId, HttpStatus.OK);
 	    } catch (CourseNotFoundException e) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found");
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
 	    }
 	}
+
 }

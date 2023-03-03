@@ -2,10 +2,9 @@ package it.crud.demo.controller;
 
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,20 +18,23 @@ import it.crud.demo.domain.Student;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.exceptions.StudentNotFoundException;
 import it.crud.demo.exceptions.UserNotFoundException;
+import it.crud.demo.services.JwtService;
 import it.crud.demo.services.StudentService;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/students")
 public class StudentRestController {
 
 	StudentService studentService;
+	JwtService jwtService;
 
-	public StudentRestController(StudentService studentService) {
+	public StudentRestController(StudentService studentService, JwtService jwtService) {
 		super();
 		this.studentService = studentService;
+		this.jwtService = jwtService;
 	}
 
-	@PermitAll
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<StudentDto>> getAllStudents() {
 		try {

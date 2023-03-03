@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.services.JwtService;
 import it.crud.demo.services.UserService;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/users")
 public class UserRestController {
@@ -64,9 +66,9 @@ public class UserRestController {
 			// Creazione dei claims da includere nel token JWT
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("sub", userDto.getUserId());
+			claims.put("id", userDateDto.getId());
 			claims.put("name", userDateDto.getName());
 			claims.put("surname", userDateDto.getSurname());
-			//claims.put("birthDate", userDateDto.getDateOfBirth());
 			claims.put("role", userDateDto.getRole());
 
 			// Generazione del token JWT
@@ -93,6 +95,7 @@ public class UserRestController {
 		}
 	}
 
+	@PreAuthorize("permitAll()")
 	@PostMapping(value = "/recupera-password")
 	public ResponseEntity<?> recuperaPassword(@RequestBody String userId) {
 		try {

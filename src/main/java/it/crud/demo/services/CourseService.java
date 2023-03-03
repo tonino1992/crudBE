@@ -81,4 +81,13 @@ public class CourseService {
 		
 	}
 
+	public Integer getExamIdByCourseId(int courseId) {
+		Course course = this.getCourseDaoById(courseId);
+	    if (course.getExam() != null) {
+	        return course.getExam().getId();
+	    } else {
+	        return null;
+	    }
+	}
+
 }

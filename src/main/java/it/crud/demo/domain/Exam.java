@@ -2,6 +2,7 @@ package it.crud.demo.domain;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class Exam {
 	private int id;
 
 	private Date day;
-	private Time hour;
+	private LocalTime hour;
 	private String classroom;
 	private boolean isDone;
 

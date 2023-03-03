@@ -2,6 +2,7 @@ package it.crud.demo.dto;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ public class ExamJoinCourseDto {
 
 	private int id;
 	private Date day;
-	private Time hour;
+	private LocalTime hour;
 	private int vote;
 	private String classroom;
 	private boolean isDone;

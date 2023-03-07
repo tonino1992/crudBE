@@ -67,6 +67,7 @@ public class TeacherService {
 			CourseDto courseDto = new CourseDto();
 			courseDto.setId(course.getId());
 			courseDto.setSubject(course.getSubject());
+			courseDto.setDone(course.isDone());
 			courseDto.setHourAmount(course.getHourAmount());
 			courseDto.setTeacherId(course.getTeacher().getId());
 			return courseDto;

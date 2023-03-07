@@ -1,7 +1,6 @@
 package it.crud.demo.domain;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 

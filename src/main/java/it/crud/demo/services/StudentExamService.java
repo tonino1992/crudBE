@@ -85,7 +85,6 @@ public class StudentExamService {
 				.findById(new StudentExamId(studentService.getStudentDaoById(studentExamDto.getStudentId()),
 						examService.getExamDaoById(studentExamDto.getExamId())))
 				.orElseThrow(() -> new IllegalArgumentException("Lo studente non ha prenotato questo esame"));
-		studentExam.setBookingDate(studentExamDto.getBookingDate());
 		studentExam.setVote(studentExamDto.getVote());
 		return studentExamRepo.save(studentExam);
 	}
@@ -105,6 +104,20 @@ public class StudentExamService {
 			students.add(studentDto);
 		}
 		return students;
+	}
+
+	public List<StudentExamDto> getStudentExamsByExam(int id) {
+	    List<StudentExam> studentExamList = this.studentExamRepo.findAllByExamId(id);
+	    return studentExamList.stream().map(se -> {
+	        StudentExamDto studentExamDto = new StudentExamDto();
+	        studentExamDto.setStudentId(se.getId().getStudent().getId());
+	        studentExamDto.setStudentName(se.getId().getStudent().getName());
+	        studentExamDto.setStudentSurname(se.getId().getStudent().getSurname());
+	        studentExamDto.setExamId(se.getId().getExam().getId());
+	        studentExamDto.setBookingDate(se.getBookingDate());
+	        studentExamDto.setVote(se.getVote());
+	        return studentExamDto;
+	    }).collect(Collectors.toList());
 	}
 
 }

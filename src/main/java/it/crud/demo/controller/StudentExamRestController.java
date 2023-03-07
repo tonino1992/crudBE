@@ -103,5 +103,17 @@ public class StudentExamRestController {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+	
+	@GetMapping(value = "/{id}/all")
+	public ResponseEntity<List<StudentExamDto>> findAllByExamId(@PathVariable int id) {
+	    try {
+	        List<StudentExamDto> studentExams = studentExamService.getStudentExamsByExam(id);
+	        return new ResponseEntity<>(studentExams, HttpStatus.OK);
+	    } catch (ExamNotFoundException e) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 
 }

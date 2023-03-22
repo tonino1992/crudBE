@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,13 +20,17 @@ import it.crud.demo.domain.Student;
 import it.crud.demo.domain.Teacher;
 import it.crud.demo.domain.User;
 import it.crud.demo.domain.enums.UserRole;
+import it.crud.demo.dto.ChangeUserIdDto;
 import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.StudentDto;
 import it.crud.demo.dto.TeacherDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.IllegalPasswordException;
+import it.crud.demo.exceptions.UserIdAlreadyExsistException;
 import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.repositories.ResetPasswordTokenRepo;
+import it.crud.demo.repositories.StudentRepo;
+import it.crud.demo.repositories.TeacherRepo;
 import it.crud.demo.repositories.UserRepo;
 
 @Service
@@ -34,14 +39,18 @@ public class UserService implements UserDetailsService {
 	private UserRepo userRepo;
 	private JavaMailSender javaMailSender;
 	private ResetPasswordTokenRepo resetPasswordTokenRepo;
+	private StudentRepo studentRepo;
+	private TeacherRepo teacherRepo;
 
 	@Autowired
-	public UserService(UserRepo userRepo, JavaMailSender javaMailSender,
-			ResetPasswordTokenRepo resetPasswordTokenRepo) {
+	public UserService(UserRepo userRepo, JavaMailSender javaMailSender, ResetPasswordTokenRepo resetPasswordTokenRepo,
+			TeacherRepo teacherRepo, StudentRepo studentRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.javaMailSender = javaMailSender;
 		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
+		this.studentRepo = studentRepo;
+		this.teacherRepo = teacherRepo;
 	}
 
 	public User findUserDaoById(String userId) {
@@ -53,7 +62,7 @@ public class UserService implements UserDetailsService {
 		return userRepo.findByUserId(userId) != null;
 	}
 
-	public User addOrUpdateUser(UserDto userDto) {
+	public User addUser(UserDto userDto) {
 		User user = new User();
 		user.setUserId(userDto.getUserId());
 		user.setEmail(userDto.getEmail());
@@ -66,6 +75,23 @@ public class UserService implements UserDetailsService {
 
 		return userRepo.save(user);
 	}
+	
+	public User updateUser(UserDto userDto) {
+	    User user = this.findUserDaoById(userDto.getUserId());
+	    if (userDto.getEmail() != null) {
+	        user.setEmail(userDto.getEmail());
+	    }
+	    if (userDto.getPassword() != null) {
+	        String password = userDto.getPassword();
+	        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+	        user.setPassword(hashedPassword);
+	    }
+	    if (userDto.getRole() != null) {
+	        user.setRole(userDto.getRole());
+	    }
+	    return userRepo.save(user);
+	}
+	
 
 	public void deleteUser(String userId) {
 		userRepo.deleteById(userId);
@@ -86,6 +112,8 @@ public class UserService implements UserDetailsService {
 			studentDto.setUserId(student.getUserId().getUserId());
 			studentDto.setName(student.getName());
 			studentDto.setSurname(student.getSurname());
+			studentDto.setUserId(student.getUserId().getUserId());
+			studentDto.setEmail(student.getUserId().getEmail());
 			studentDto.setDateOfBirth(student.getDateOfBirth());
 
 			return studentDto;
@@ -99,6 +127,8 @@ public class UserService implements UserDetailsService {
 			teacherDto.setUserId(teacher.getUserId().getUserId());
 			teacherDto.setName(teacher.getName());
 			teacherDto.setSurname(teacher.getSurname());
+			teacherDto.setUserId(teacher.getUserId().getUserId());
+			teacherDto.setEmail(teacher.getUserId().getEmail());
 			teacherDto.setDateOfBirth(teacher.getDateOfBirth());
 
 			return teacherDto;
@@ -151,6 +181,40 @@ public class UserService implements UserDetailsService {
 			throw new UsernameNotFoundException("User not found");
 		}
 		return user;
+	}
+
+	@Transactional
+	public void changeUserId(ChangeUserIdDto userIds) {
+
+		User oldUser = this.findUserDaoById(userIds.getOldUserId());
+		User newUser = new User();
+
+		if (userRepo.findById(userIds.getNewUserId()).isPresent()) {
+			throw new UserIdAlreadyExsistException("User already exsist!");
+		}
+
+		newUser.setUserId(userIds.getNewUserId());
+		newUser.setPassword(oldUser.getPassword());
+		newUser.setEmail(oldUser.getEmail());
+		newUser.setRole(oldUser.getRole());
+
+		userRepo.saveAndFlush(newUser);
+
+		Student student = new Student();
+		Teacher teacher = new Teacher();
+		if (oldUser.getRole() == UserRole.STUDENT) {
+			student = oldUser.getStudent();
+			student.setUserId(newUser);
+			this.studentRepo.save(student);
+		} else {
+			teacher = oldUser.getTeacher();
+			teacher.setUserId(newUser);
+			this.teacherRepo.save(teacher);
+		}
+
+		userRepo.delete(oldUser);	
+		 
+
 	}
 
 }

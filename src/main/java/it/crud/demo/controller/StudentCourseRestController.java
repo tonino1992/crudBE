@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.crud.demo.domain.StudentCourse;
 import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.dto.StudentCourseDto;
 import it.crud.demo.dto.StudentDto;
@@ -34,10 +33,10 @@ public class StudentCourseRestController {
 
 
 	@PostMapping(value = "/iscription")
-	public ResponseEntity<StudentCourse> enrollStudentInCourse(@RequestBody StudentCourseDto studentCourseDto) {
+	public ResponseEntity<?> enrollStudentInCourse(@RequestBody StudentCourseDto studentCourseDto) {
 		try {
-			StudentCourse studentCourse = studentCourseService.enrollStudentInCourse(studentCourseDto);
-			return new ResponseEntity<>(studentCourse, HttpStatus.CREATED);
+			studentCourseService.enrollStudentInCourse(studentCourseDto);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (StudentCourseAlreadyExistsException e) {
 			// error 409
 			return new ResponseEntity<>(HttpStatus.CONFLICT);

@@ -42,7 +42,7 @@ public class TokenService {
 		User user = userService.findUserDaoById(userDto.getUserId());		
 		userDto.setEmail(user.getEmail());
 		userDto.setRole(user.getRole());		
-		User userUpdated = userService.addOrUpdateUser(userDto);	
+		User userUpdated = userService.updateUser(userDto);	
 		
 		tokenRepo.deleteByUserId(userUpdated);			
 	}

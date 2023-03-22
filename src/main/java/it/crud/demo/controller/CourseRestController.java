@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import it.crud.demo.domain.Course;
 import it.crud.demo.dto.CourseDto;
 import it.crud.demo.dto.CourseJoinTeacherDto;
 import it.crud.demo.exceptions.CourseNotFoundException;
@@ -49,10 +48,10 @@ public class CourseRestController {
 	}
 	
 	@PutMapping(value = "/update")
-	public ResponseEntity<Course> updateCourse(@RequestBody CourseDto courseDto) {
+	public ResponseEntity<?> updateCourse(@RequestBody CourseDto courseDto) {
 	    try {
-	        Course updatedCourse = courseService.updateCourse(courseDto);
-	        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
+	        courseService.updateCourse(courseDto);
+	        return new ResponseEntity<>( HttpStatus.OK);
 	    } catch (CourseNotFoundException e) {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    } catch (TeacherNotFoundException e) {
@@ -68,8 +67,8 @@ public class CourseRestController {
 	@PostMapping(value = "/add")
 	public ResponseEntity<?> addCourse(@RequestBody CourseDto courseDto) {
 	    try {
-	        Course course = courseService.addCourse(courseDto);
-	        return new ResponseEntity<>(course, HttpStatus.CREATED);
+	        courseService.addCourse(courseDto);
+	        return new ResponseEntity<>(HttpStatus.CREATED);
 	    } catch (TeacherNotFoundException e) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Teacher not found");
 	    } catch (Exception e) {

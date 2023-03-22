@@ -119,5 +119,25 @@ public class StudentExamService {
 	        return studentExamDto;
 	    }).collect(Collectors.toList());
 	}
+	
+	public List<StudentExamDto> getDoneExamsByStudent(int studentId) {
+	    List<StudentExam> studentExams = studentExamRepo.findAllByStudentId(studentId);
+	    return studentExams.stream().filter(se -> se.getId().getExam().isDone())
+	            .map(se -> {
+	                StudentExamDto seDto = new StudentExamDto();
+	                seDto.setBookingDate(se.getBookingDate());
+	                seDto.setVote(se.getVote());
+	                seDto.setStudentId(se.getId().getStudent().getId());
+	                seDto.setStudentName(se.getId().getStudent().getName());
+	                seDto.setStudentSurname(se.getId().getStudent().getSurname());
+	                seDto.setExamId(se.getId().getExam().getId());
+	                seDto.setTeacherName(se.getId().getExam().getCourse().getTeacher().getName());
+	                seDto.setTeacherSurname(se.getId().getExam().getCourse().getTeacher().getSurname());
+	                seDto.setSubject(se.getId().getExam().getCourse().getSubject());
+	                return seDto;
+	            })
+	            .collect(Collectors.toList());
+	}
+
 
 }

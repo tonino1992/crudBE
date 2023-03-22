@@ -99,7 +99,7 @@ public class TeacherService {
 			userDto.setEmail(teacherDto.getEmail());
 			userDto.setPassword(teacherDto.getPassword());
 			userDto.setRole(teacherDto.getRole());
-			User userSaved = userService.addOrUpdateUser(userDto);
+			User userSaved = userService.addUser(userDto);
 
 			Teacher teacher = new Teacher();
 			teacher.setName(teacherDto.getName());

@@ -9,6 +9,7 @@ import javax.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.crud.demo.domain.User;
+import it.crud.demo.dto.ChangeUserIdDto;
 import it.crud.demo.dto.PersonDto;
 import it.crud.demo.dto.UserDto;
 import it.crud.demo.exceptions.IllegalPasswordException;
+import it.crud.demo.exceptions.UserIdAlreadyExsistException;
 import it.crud.demo.exceptions.UserNotFoundException;
 import it.crud.demo.services.JwtService;
 import it.crud.demo.services.UserService;
 
-@PreAuthorize("isAuthenticated()")
+
 @RestController
 @RequestMapping(value = "/users")
 public class UserRestController {
@@ -39,29 +41,28 @@ public class UserRestController {
 	}
 
 	@PutMapping(value = "/update")
-	public ResponseEntity<User> updateUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
 		try {
-			User user = userService.addOrUpdateUser(userDto);
-			return new ResponseEntity<>(user, HttpStatus.OK);
+			userService.updateUser(userDto);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping(value = "/add")
-	public ResponseEntity<User> addUser(@RequestBody UserDto userDto) {
-		User user = userService.addOrUpdateUser(userDto);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+	public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
+		userService.addUser(userDto);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PermitAll
+	@CrossOrigin
 	@PostMapping(value = "/login")
 	public ResponseEntity<String> login(@RequestBody UserDto userDto) {
 		try {
 			// Autenticazione dell'utente e raccolta dei suoi dati
 			PersonDto userDateDto = userService.validateUser(userDto.getUserId(), userDto.getPassword());
-			
-			
 
 			// Creazione dei claims da includere nel token JWT
 			Map<String, Object> claims = new HashMap<>();
@@ -69,6 +70,7 @@ public class UserRestController {
 			claims.put("id", userDateDto.getId());
 			claims.put("name", userDateDto.getName());
 			claims.put("surname", userDateDto.getSurname());
+			claims.put("email", userDateDto.getEmail());
 			claims.put("role", userDateDto.getRole());
 
 			// Generazione del token JWT
@@ -102,10 +104,23 @@ public class UserRestController {
 			userService.recuperaPassword(userId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (MessagingException e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	@PutMapping(value = "/change-userid")
+	public ResponseEntity<?> changeUserId(@RequestBody ChangeUserIdDto userIds) {
+		try {
+			userService.changeUserId(userIds);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch (UserIdAlreadyExsistException e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		} catch (Exception ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

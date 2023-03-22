@@ -16,6 +16,8 @@ public class PersonDto {
     private String name;
     private String surname;
     private LocalDate dateOfBirth;
+    private String password;
+	private String email;
     private UserRole role;
 
    

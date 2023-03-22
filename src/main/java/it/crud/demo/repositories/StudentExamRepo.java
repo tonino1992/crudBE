@@ -17,4 +17,7 @@ public interface StudentExamRepo extends JpaRepository<StudentExam, StudentExamI
 	@Query("SELECT se FROM StudentExam se WHERE se.id.exam.id = :examId")
     List<StudentExam> findAllByExamId(@Param("examId") int examId);
 	
+	@Query("SELECT se FROM StudentExam se WHERE se.id.student.id = :studentId")
+	List<StudentExam> findAllByStudentId(@Param("studentId") int studentId);
+	
 }

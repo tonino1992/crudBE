@@ -17,5 +17,8 @@ public class StudentExamDto {
 	private String studentName;
 	private String studentSurname;
 	private int examId;
+	private String teacherName;
+	private String teacherSurname;
+	private String subject;
 	
 }

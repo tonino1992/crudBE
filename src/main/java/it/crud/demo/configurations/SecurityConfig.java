@@ -33,8 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests()
-                .antMatchers("/users/login", "http://localhost:8090/swagger-ui/", "/users/recupera-password",
-                		"/students/add", "/teachers/add").permitAll()  // consenti l'accesso a tutti per questa URL
+                .antMatchers("/users/login", "/swagger-ui/", "/users/recupera-password",
+                		"/token/verify-token", "/token/change-password").permitAll()  // consenti l'accesso a tutti per questa URL
                 .anyRequest().authenticated()  // richiedi l'autenticazione per tutte le altre URL
                 .and()
                 .formLogin().and()
@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
